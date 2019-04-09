@@ -1,6 +1,6 @@
 {
   "name": "gtin-cloud",
-  "version": "1.3.0",
+  "version": "0.9.0",
   "description": "GTIN cloud storage strategy ",
   "main": "handler.js",
   "scripts": {
@@ -27,7 +27,8 @@
     "debug": "^4.1.1",
     "got": "^9.6.0",
     "source-map-support": "^0.5.12",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "xml-js": "^1.6.11"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.3",
