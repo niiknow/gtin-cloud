@@ -61,9 +61,29 @@ functions:
     events:
       - http:
             method: post
-            path: store/{gtin}
+            path: store/{gtin}/{vendor}
             cors: true
             request:
               parameters:
                 paths:
-                  id: true
+                  gtin: true
+      - http:
+            method: get
+            path: store/{gtin}/{vendor}
+            cors: true
+            request:
+              parameters:
+                paths:
+                  gtin: true
+
+  researchHandler:
+    handler: handler.researchHandler
+    events:
+      - http:
+            method: get
+            path: research/{gtin}/{vendor}
+            cors: true
+            request:
+              parameters:
+                paths:
+                  gtin: true

@@ -1,3 +1,5 @@
-import store from './lib/storeHandler'
+import store from './src/storeHandler'
+import research from './src/researchHandler'
 
-export const storeHandler = post
+export const storeHandler = store
+export const researchHandler = research
