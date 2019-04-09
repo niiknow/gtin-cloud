@@ -4,7 +4,7 @@ import got      from 'got'
 const debug = require('debug')('gtin-cloud')
 
 class Handlers {
-  static async handleEanData(ean13) {
+  static async eanDataRequest(ean13) {
     const query = {
       v: 3,
       find: `0000000000000${ean13}`.trim().slice(-13),
@@ -15,6 +15,9 @@ class Handlers {
     const rst = await got('https://eandata.com/feed/', { query })
     debug(rst.body)
     return rst.body
+  }
+
+  static async itemMasterRequest(ean13) {
   }
 }
 
@@ -27,19 +30,21 @@ export const handlers = Handlers
  * @param  object     context  the context
  * @param  Function   callback the callback
  */
-export const handleEanData = async (event, context, callback) => {
+export default async (event, context, callback) => {
   const qs         = event.queryStringParameters || {}
-  const vendor     = (qs.vendor || '')
+  const vendor     = (event.pathParameters.vendor || '').toLowerCase()
   const rspHandler = res(context, callback)
+  const ean13      = (qs.q || '').trim()
+
+  if (ean13.length < 13) {
+    return rspHandler(`${ean13} must be at least 13 characters`, 422)
+  }
 
   if (vendor === 'eandata') {
-    const ean13 = (qs.q || '').trim()
-
-    if (ean13.length < 13) {
-      rspHandler(`${ean13} must be at least 13 characters`, 422)
-    }
-
-    const rst   = await Handlers.handleEanData(ean13)
+    const rst = await Handlers.eanDataRequest(ean13)
+    return rspHandler(rst)
+  } else if (vendor === 'itemmaster') {
+    const rst = await Handlers.itemMasterRequest(ean13)
     return rspHandler(rst)
   }
 

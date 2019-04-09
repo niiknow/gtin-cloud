@@ -25,22 +25,23 @@ export default async (event, context, callback) => {
   const rspHandler = res(context, callback)
   const rawUrl     = url.split(/#|\?/)[0];
   const fileName   = (qs.name || rawUrl.split('/').pop()).trim().toLowerCase();
-  const ext        = fileName.split('.').pop();
-  const basePath   = gtinPath(gtin, event.pathParameters.vendor);
+  const ext        = fileName.split('.').pop()
+  const vendor     = (event.pathParameters.vendor || '').toLowerCase()
+  const basePath   = gtinPath(gtin, vendor);
   const body       = (event.body || '').trim()
   const tasks      = []
   let destPath     = ''
 
   // validate parameters
   if (type.length > 0 && url.length <= 0) {
-    return rspHandler(`url querystring parameter is required for type of ${type}`, 422)
+    return rspHandler(`URL querystring parameter is required for type of ${type}`, 422)
   }
 
   debug(`begin ${type}: ${url}`)
 
   // handle image
   if (type.indexOf('image') > -1) {
-    if (ext !== 'jpg' || ext !== 'jpeg') {
+    if (ext !== 'jpg' && ext !== 'jpeg') {
       return rspHandler(`${fileName} extension must be jpg/jpeg`, 422)
     }
 

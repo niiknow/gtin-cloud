@@ -76,9 +76,9 @@ functions:
     events:
       - http:
             method: get
-            path: research/{gtin}/{vendor}
+            path: research/{vendor}
             cors: true
             request:
               parameters:
                 paths:
-                  gtin: true
+                  vendor: true
