@@ -1,6 +1,7 @@
 import fs       from 'fs'
 import res      from './response'
 import saveToS3 from './saveToS3'
+import gtinPath from './gtinPath'
 
 const debug = require('debug')('gtin-cloud')
 
@@ -23,14 +24,19 @@ export default async (event, context, callback) => {
   const type       = qs.type || ''
   const rspHandler = res(context, callback)
   const rawUrl     = url.split(/\#|\?/)[0];
-  const fileName   = rawUrl.split('/').pop().trim().toLowerCase();
-  const ext        = fileName.split('.').pop().trim();
+  const fileName   = (qs.name || rawUrl.split('/').pop()).trim().toLowerCase();
+  const ext        = fileName.split('.').pop();
   const basePath   = gtinPath(gtin, event.pathParameters.vendor);
+  const body       = (event.body || '').trim()
   let destPath     = basePath + 'index.jpg'
 
   // possible action values: image or media
   // image is featured image
   if (type.indexOf('image') > -1) {
+    if (ext !== 'jpg' || ext !== 'jpeg') {
+      return rspHandler(`${fileName} extension must be jpg/jpeg`, 422)
+    }
+
     // download and store image as index.jpg
     const fstream = got.stream(url)
     await saveToS3(destPath, fstream, 'image/jpeg');
@@ -41,9 +47,10 @@ export default async (event, context, callback) => {
     await saveToS3(destPath);
   }
 
-  if (event.body) {
+  // only store if body is a json
+  if (body.indexOf('{') > 0) {
     await saveToS3(basePath + 'index.json', event.body, 'application/json');
   }
 
-  return rspHandler(`Uploaed as: ${destPath}`, 422)
+  return rspHandler(`Uploaded as: ${destPath}`, 422)
 }
