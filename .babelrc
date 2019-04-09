@@ -1,0 +1,29 @@
+{
+  "plugins": ["source-map-support", "@babel/plugin-transform-runtime"],
+  "presets": [
+    ["@babel/preset-env", {
+      "targets": {
+        "node": "8.10"
+      }
+    }]
+  ],
+  "env": {
+    "production": {
+      "retainLines": false,
+      "minified": true
+    },
+    "development": {
+      "retainLines": true,
+      "plugins": [
+        "@babel/plugin-transform-runtime"
+      ]
+    },
+    "test": {
+      "retainLines": true,
+      "plugins": [
+        "@babel/plugin-transform-runtime",
+        "istanbul"
+      ]
+    }
+  }
+}
