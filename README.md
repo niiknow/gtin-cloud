@@ -1,5 +1,5 @@
 # GTIN Cloud
-> How would a consumer get all of a GTIN Item Information by simply knowing the GTIN Number of the Item?  And, without using a database?
+> Without using a database, how would you store and access Item informations by simply providing its GTIN Number?  And, without using a database?
 
 Without using a database, we would need to create a convention to store the data in folder structures that are easy to access without sacraficing performance.
 
