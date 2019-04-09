@@ -24,6 +24,7 @@
   "dependencies": {
     "busboy": "^0.2.14",
     "debug": "^4.1.1",
+    "got": "^9.6.0",
     "source-map-support": "^0.5.12",
     "uuid": "^3.3.2"
   },
@@ -43,10 +44,8 @@
     "eslint-config-prettier": "^3.6.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jest": "^21.27.2",
-    "got": "^9.6.0",
     "jest": "^24.7.1",
     "serverless": "^1.40.0",
-    "serverless-apigw-binary": "^0.4.4",
     "serverless-offline": "^3.33.0",
     "serverless-plugin-existing-s3": "^2.3.3",
     "serverless-webpack": "^5.2.0",

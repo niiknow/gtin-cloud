@@ -4,7 +4,6 @@ service: gtin-cloud
 plugins:
   - serverless-webpack
   - serverless-plugin-existing-s3
-  - serverless-apigw-binary
   - serverless-offline
 
 # serverless-webpack configuration
