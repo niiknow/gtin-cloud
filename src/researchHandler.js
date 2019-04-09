@@ -5,11 +5,11 @@ import xmljs    from 'xml-js'
 const debug = require('debug')('gtin-cloud')
 
 class Handlers {
-  static async eanDataRequest(gtin) {
+  static async eanDataRequest(gtin, forImage = false) {
     const query = {
       v: 3,
       find: `0000000000000${gtin}`.slice(-13),
-      keycode: 'CDED97825A77DBEB',
+      keycode: process.env.EANDATA_KEY,
       mode: 'json'
     }
 
@@ -18,10 +18,10 @@ class Handlers {
     return rst.body
   }
 
-  static async itemMasterRequest(gtin) {
+  static async itemMasterRequest(gtin, forImage = false) {
     gtin = `0000000000000${gtin}`.slice(-14)
 
-    const url = `https://api.itemmaster.com/v2.2/item/`
+    const url = 'https://api.itemmaster.com/v2.2/item/'
 
     const headers = {
       username: process.env.IM_USER,
@@ -48,8 +48,27 @@ class Handlers {
     return itemJson
   }
 
-  static async kwikeeRequest(ean13) {
+  static async kwikeeRequest(gtin, forImage = false) {
 
+    gtin = `0000000000000${gtin}`.slice(-14)
+
+    const url = `https://api.kwikee.com/public/v3/data/gtin/${gtin}`
+
+    const headers = {
+      'Ocp-Apim-Subscription-Key': process.env.KWIKEE_KEY
+    }
+
+    const rst  = await got(url, { headers })
+    const json = xmljs.xml2json(rst.body, {
+      compact: true,
+      ignoreDeclaration: true
+    })
+    const obj = JSON.parse(json)
+    const itemJson = JSON.stringify(obj.items.item)
+
+    // console.log(JSON.stringify(obj.items.item, null, 2))
+    debug(itemJson)
+    return itemJson
   }
 }
 
