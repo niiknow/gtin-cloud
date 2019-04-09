@@ -1,4 +1,3 @@
-import fs       from 'fs'
 import res      from './response'
 import saveToS3 from './saveToS3'
 import gtinPath from './gtinPath'
@@ -24,7 +23,7 @@ export default async (event, context, callback) => {
   const url        = (qs.url || '').trim()
   const type       = (qs.type || '').trim()
   const rspHandler = res(context, callback)
-  const rawUrl     = url.split(/\#|\?/)[0];
+  const rawUrl     = url.split(/#|\?/)[0];
   const fileName   = (qs.name || rawUrl.split('/').pop()).trim().toLowerCase();
   const ext        = fileName.split('.').pop();
   const basePath   = gtinPath(gtin, event.pathParameters.vendor);
@@ -36,6 +35,8 @@ export default async (event, context, callback) => {
   if (type.length > 0 && url.length <= 0) {
     return rspHandler(`url querystring parameter is required for type of ${type}`, 422)
   }
+
+  debug(`begin ${type}: ${url}`)
 
   // handle image
   if (type.indexOf('image') > -1) {
@@ -50,8 +51,8 @@ export default async (event, context, callback) => {
   } else if (type.indexOf('media') > -1) {
     // handle media
     destPath = basePath + 'media/' + fileName
-    fstream  = got.stream(url)
-    tasks.push(saveToS3(destPath));
+    const fstream  = got.stream(url)
+    tasks.push(saveToS3(destPath, fstream));
   } else if (type.length > 0) {
     return rspHandler(`Unknown type ${type}`, 422)
   }

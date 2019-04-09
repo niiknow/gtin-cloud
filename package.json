@@ -13,7 +13,8 @@
     "sls": "node_modules/.bin/serverless",
     "service-info": "sls info",
     "local": "node_modules/.bin/serverless offline --stage dev",
-    "prod": "pm2 start pm2.json --no-daemon"
+    "prod": "pm2 start pm2.json --no-daemon",
+    "test": "jest"
   },
   "author": "Tom Noogen",
   "license": "MIT",
