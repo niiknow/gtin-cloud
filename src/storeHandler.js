@@ -2,6 +2,7 @@ import fs       from 'fs'
 import res      from './response'
 import saveToS3 from './saveToS3'
 import gtinPath from './gtinPath'
+import got      from 'got'
 
 const debug = require('debug')('gtin-cloud')
 

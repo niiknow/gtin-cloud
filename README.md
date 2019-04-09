@@ -7,8 +7,8 @@ So, without using a database, we would need to create a convention to store the 
 Let say you have a ficticious GTIN number 00123456789012.  Then the folder path for this GTIN number would be: 123/456/789/00123456789012/
 
 1. Drop the first to 2 digits (00)
-2. Split the next 9 numbers into 3 digits folder structure
-3. And store the data in the folder that is the GTIN
+2. Split the next 9 numbers into 3 digits folder structure - these are usually Company Prefix (CP)
+3. And store image as index.jpg and data as index.json in the GTIN folder/path
 
 # The Power of 3s
 - When storing in the cloud like AWS S3, the first 3 characters identify the partition AWS store the data.  This improve the speed of access.
