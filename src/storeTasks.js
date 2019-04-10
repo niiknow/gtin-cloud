@@ -1,4 +1,3 @@
-
 import saveToS3 from './saveToS3'
 import gtinPath from './gtinPath'
 import got      from 'got'
@@ -13,39 +12,43 @@ import got      from 'got'
  * @return {string}      the folder path
  */
 export default (gtin, url, type, body, vendor = '', name = null, urlExtra = null) => {
-  const rawUrl     = url.split(/#|\?/)[0];
-  const fileName   = (name || rawUrl.split('/').pop()).trim().toLowerCase();
-  const ext        = fileName.split('.').pop()
-  const vendor     = (vendor || '').toLowerCase()
-  const basePath   = gtinPath(gtin, vendor);
-  const body       = (body || '').trim()
-  const tasks      = []
-  let destPath     = ''
+  vendor = (vendor || '').toLowerCase()
+  body   = (body || '').trim()
+
+  const rawUrl     = (url || '').trim().split(/#|\?/)[0];
+  const basePath = gtinPath(gtin, vendor);
+  const tasks    = []
+  let destPath   = ''
 
   // handle image
-  if (type.indexOf('image') > -1) {
-    if (ext !== 'jpg' && ext !== 'jpeg') {
-      return { error: `${fileName} extension must be jpg/jpeg` }
-    }
+  if (rawUrl.indexOf('http') === 0) {
+    const fileName = (name || rawUrl.split('/').pop()).toLowerCase();
+    const ext      = fileName.split('.').pop()
 
-    // download and store image as index.jpg
-    destPath = basePath + 'index.jpg'
-    const fstream = got.stream(url, urlExtra)
-    tasks.push(saveToS3(destPath, fstream, 'image/jpeg'));
-  } else if (type.indexOf('media') > -1) {
-    // handle media
-    destPath = basePath + 'media/' + fileName
-    const fstream  = got.stream(url, urlExtra)
-    tasks.push(saveToS3(destPath, fstream));
-  } else if (type.length > 0) {
-    return { error: `Unknown type ${type}` }
+    if (type.indexOf('image') > -1) {
+      if (ext !== 'jpg' && ext !== 'jpeg') {
+        return { error: `${fileName} extension must be jpg/jpeg`, destPath: destPath }
+      }
+
+      // download and store image as index.jpg
+      destPath = basePath + 'index.jpg'
+      const fstream = got.stream(url, urlExtra)
+      tasks.push(saveToS3(destPath, fstream, 'image/jpeg'));
+    } else if (type.indexOf('media') > -1) {
+      // handle media
+      destPath = basePath + 'media/' + fileName
+      const fstream  = got.stream(url, urlExtra)
+      tasks.push(saveToS3(destPath, fstream));
+    } else if (type.length > 0) {
+      return { error: `Unknown type ${type}`, destPath: destPath }
+    }
   }
 
   // only store if body is a json
-  if (body.indexOf('{') > 0) {
+  if (body.indexOf('{') > -1) {
     tasks.push(saveToS3(basePath + 'index.json', body, 'application/json'));
   }
 
   // process all async tasks
-  return { tasks: tasks }
+  return { tasks: tasks, destPath: destPath }
 }

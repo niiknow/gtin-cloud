@@ -28,13 +28,13 @@ export default async (event, context, callback) => {
   }
 
   debug(`begin ${type}: ${url}`)
-  const rst = storeTasks(gtin, url, type, event.body, event.pathParameters.vendor, name)
+  const rsp = storeTasks(gtin, url, type, event.body, event.pathParameters.vendor, qs.name)
 
-  if (rst.error) {
-    return rspHandler(rst.error, 422)
+  if (rsp.error) {
+    return rspHandler(rsp.error, 422)
   }
 
-  await Promise.all(rst.tasks)
+  await Promise.all(rsp.tasks)
 
-  return rspHandler(`Uploaded as: ${destPath}`)
+  return rspHandler(`Uploaded as: ${rsp.destPath}`)
 }

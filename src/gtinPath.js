@@ -8,6 +8,7 @@
  * @return {string}      the folder path
  */
 export default (gtin, vendor = '') => {
+  gtin        = `00000000000000${gtin}`.slice(-14)
   const upc   = gtin.slice(-12)
   const parts = [upc.substr(0, 3), upc.substr(3, 3), upc.substr(6, 3)]
   let myPath  = parts.join('/') + '/' + gtin + '/'

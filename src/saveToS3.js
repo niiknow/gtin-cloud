@@ -10,12 +10,13 @@ export default (path, data, contentType = 'image/jpeg') => {
       Body: data,
       Key: path
     }
+    // console.log(path)
 
     if (contentType) {
       params.ContentType = contentType
     }
 
-    s3.putObject(params, (err2, data) => {
+    s3.upload(params, (err2, data) => {
         if (err2) {
           debug(`'${path}' upload error`, err2)
           return reject(err2)
