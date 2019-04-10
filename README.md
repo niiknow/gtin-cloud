@@ -23,6 +23,7 @@ Security is by adding an API key to the service and disabling public access to t
 A Content Delivery Network (CDN) would go a long way to help increase the performance of Cloud Storage access.
 
 # Research API Integration
+- [x] DataKick - https://www.datakick.org/api/items/%s
 - [x] EAN Data - https://eandata.com/feed/?v=3&find=ean13&keycode=apikey&mode=json
 - [x] Item Master - https://api.itemmaster.com/v2.2/item/?upc=gtin&ef=jpg&eip=75&epf=1000&allImg=Y
 - [x] Kwikee - https://api.kwikee.com/public/v3/data/gtin/%s
@@ -31,5 +32,9 @@ A Content Delivery Network (CDN) would go a long way to help increase the perfor
 - [ ] Barcodeable - https://www.barcodable.com/api/v1/%s/%s
 - [ ] Walmart - https://api.walmartlabs.com/v1/items?apiKey=%s&upc=%s
 - [ ] Tesco - https://dev.tescolabs.com/product/?gtin=%s
+
+> Research API introduce pulling data from various vendors, example: datakick, eandata, itemmaster, kwikee
+
+We segment the Vendor storage to help with data retrieval and/or purge of data if requested by the Vendor.
 
 # MIT

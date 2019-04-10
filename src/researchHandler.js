@@ -6,6 +6,41 @@ import storeTasks from './storeTasks'
 const debug = require('debug')('gtin-cloud')
 
 class Handlers {
+  static async datakickRequest(gtin, stashData = false) {
+    try {
+      const rst = await got(`https://www.datakick.org/api/items/${gtin}`)
+      debug(rst.body)
+
+      const obj = JSON.parse(rst.body)
+      let image   = null
+
+      if (!obj.gtin14) {
+        return { error: 'request error', response: rst.body }
+      }
+
+      if (obj.images[0]) {
+        image = obj.images[0].url
+      }
+
+
+      // console.log(obj)
+      // debug(itemJson)
+      if (stashData) {
+        // stash the data and image
+        const rsp = storeTasks(gtin, image, 'image', JSON.stringify(obj), 'datakick')
+        if (rsp.tasks) {
+          await Promise.all(rsp.tasks)
+        }
+      }
+
+      debug(`completed ${gtin}`)
+      return product || `${gtin} not found`
+    } catch(e) {
+      debug(JSON.stringify(e, null, 2))
+      return { error: 'request error' }
+    }
+  }
+
   static async eanDataRequest(gtin, stashData = false) {
     const query = {
       v: 3,
@@ -13,7 +48,6 @@ class Handlers {
       keycode: process.env.EANDATA_KEY,
       mode: 'json'
     }
-    let type = 'none'
 
     try {
       const rst = await got('https://eandata.com/feed/', { query })
@@ -179,7 +213,10 @@ export default async (event, context, callback) => {
   debug(`started for ${gtin}`)
 
   // json stringify because we expect an object
-  if (vendor === 'eandata') {
+  if (vendor === 'datakick') {
+    const rst = await Handlers.datakickRequest(gtin, !!stash)
+    return rspHandler(rst)
+  } else if (vendor === 'eandata') {
     const rst = await Handlers.eanDataRequest(gtin, !!stash)
     return rspHandler(rst)
   } else if (vendor === 'itemmaster') {
