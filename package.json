@@ -8,12 +8,10 @@
     "deploy-prod": "sls deploy --stage prod && sls s3deploy --stage prod",
     "lint": "eslint --ext .js,.jsx ./",
     "lint-fix": "eslint --fix --ext .js,.jsx ./",
-    "logs": "sls logs -f formPostHandler -t",
     "serverless": "node_modules/.bin/serverless",
     "sls": "node_modules/.bin/serverless",
     "service-info": "sls info",
-    "local": "node_modules/.bin/serverless offline --stage dev",
-    "prod": "pm2 start pm2.json --no-daemon",
+    "local": "cross-env DEBUG=gtin-cloud SLS_DEBUG=* node_modules/.bin/serverless offline --stage dev",
     "test": "jest"
   },
   "author": "Tom Noogen",
@@ -23,11 +21,9 @@
     "url": "https://github.com/niiknow/gtin-cloud.git"
   },
   "dependencies": {
-    "busboy": "^0.2.14",
     "debug": "^4.1.1",
     "got": "^9.6.0",
     "source-map-support": "^0.5.12",
-    "uuid": "^3.3.2",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {

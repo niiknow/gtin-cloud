@@ -36,5 +36,5 @@ export default async (event, context, callback) => {
 
   await Promise.all(rsp.tasks)
 
-  return rspHandler(`Uploaded as: ${rsp.destPath}`)
+  rspHandler(`Uploaded as: ${rsp.destPath}`)
 }

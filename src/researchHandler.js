@@ -17,23 +17,36 @@ class Handlers {
 
     try {
       const rst = await got('https://eandata.com/feed/', { query })
-      const obj = JSON.parse(rst.body)
+      debug(rst.body)
 
-      // console.log(obj)
-      // debug(itemJson)
-      if (stashData && obj.product) {
-        // stash the data and image
-        const rsp = storeTasks(gtin, obj.product.image, 'image', rst.body, 'eandata')
-        if (rsp.tasks) {
-          await Promise.all(rsp.tasks)
+      const obj = JSON.parse(rst.body)
+      let product = null
+
+      if (!obj.product) {
+        return { error: 'request error', response: rst.body }
+      }
+
+      if (obj.product.attributes.product !== 'Unknown') {
+        debug(`found ${gtin}`)
+        product = obj.product
+
+        // console.log(obj)
+        // debug(itemJson)
+        if (stashData) {
+          // stash the data and image
+          const rsp = storeTasks(gtin, product.image, 'image', JSON.stringify(product), 'eandata')
+          if (rsp.tasks) {
+            await Promise.all(rsp.tasks)
+          }
         }
+
       }
 
       debug(`completed ${gtin}`)
-      return rst.body
+      return product || `${gtin} not found`
     } catch(e) {
       debug(JSON.stringify(e, null, 2))
-      return JSON.stringify({ error: 'request error' })
+      return { error: 'request error' }
     }
   }
 
@@ -62,13 +75,10 @@ class Handlers {
         ignoreDeclaration: true
       })
 
-      const obj    = JSON.parse(json)
-      let image    = null
-      let itemJson = null;
+      const obj = JSON.parse(json)
+      let image = null
 
       if (obj.items && obj.items.item) {
-        itemJson = JSON.stringify(obj.items.item)
-
         // console.log(JSON.stringify(obj.items.item, null, 2))
 
         if (obj.items.item.media) {
@@ -85,12 +95,10 @@ class Handlers {
             image = media.url._text
           }
         }
-        // console.log(image)
 
-        debug(itemJson)
         if (stashData) {
           // stash the data and image
-          const rsp = storeTasks(gtin, image, 'image', itemJson, 'itemmaster', null, { headers })
+          const rsp = storeTasks(gtin, image, 'image', JSON.stringify(obj.items.item), 'itemmaster', null, { headers })
           if (rsp.tasks) {
             await Promise.all(rsp.tasks)
           }
@@ -98,10 +106,10 @@ class Handlers {
       }
 
       debug(`completed ${gtin}`)
-      return itemJson
+      return obj.items.item || `${gtin} not found`
     } catch(e) {
       debug(JSON.stringify(e, null, 2))
-      return JSON.stringify({ error: 'request error' })
+      return { error: 'request error' }
     }
   }
 
@@ -119,21 +127,19 @@ class Handlers {
       const r1    = got(url, { headers })
       const r2    = got(iurl, { headers })
       const rsts  = await Promise.all([r1, r2])
-      const data  = JSON.parse(rsts[0].body)
+      const obj   = JSON.parse(rsts[0].body)
       const idata = JSON.parse(rsts[1].body)
       let image   = null
 
       if (idata.kwikeeApiV3 && idata.kwikeeApiV3.gtin)
       {
-        data.images = idata.kwikeeApiV3.gtin
-        image = data.images[0].mainImageAsset.files[0].url
+        obj.media = idata.kwikeeApiV3.gtin
+        image     = obj.media[0].mainImageAsset.files[0].url
       }
-
-      const jsonData = JSON.stringify(data)
 
       if (stashData) {
         // console.log(image)
-        const rsp = storeTasks(gtin, image, 'image', jsonData, 'kwikee', `${gtin}.jpg`, { headers })
+        const rsp = storeTasks(gtin, image, 'image', JSON.stringify(obj), 'kwikee', `${gtin}.jpg`, { headers })
         // console.log(rsp)
         if (rsp.tasks) {
           await Promise.all(rsp.tasks)
@@ -141,11 +147,11 @@ class Handlers {
       }
 
       debug(`completed ${gtin}`)
-      return jsonData
+      return obj
     } catch(e) {
       // console.log(e)
       debug(JSON.stringify(e, null, 2))
-      return JSON.stringify({ error: 'request error' })
+      return { error: 'request error' }
     }
   }
 }
@@ -171,6 +177,7 @@ export default async (event, context, callback) => {
 
   debug(`started for ${gtin}`)
 
+  // json stringify because we expect an object
   if (vendor === 'eandata') {
     const rst = await Handlers.eanDataRequest(gtin, true)
     return rspHandler(rst)
@@ -184,5 +191,5 @@ export default async (event, context, callback) => {
 
   debug(`unknown vendor ${vendor}`)
 
-  return rspHandler(`Unknown vendor: ${vendor}`, 422)
+  rspHandler(`Unknown vendor: ${vendor}`, 422)
 }
