@@ -1,6 +1,5 @@
-const slsw = require('serverless-webpack')
+const slsw          = require('serverless-webpack')
 const nodeExternals = require('webpack-node-externals')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   entry: slsw.lib.entries,
@@ -19,9 +18,7 @@ module.exports = {
     // Turn off size warnings for entry points
     hints: false,
   },
-  plugins: [
-    new CopyWebpackPlugin(['forms/**', 'templates/**'])
-  ],
+  plugins: [],
   // Run babel on all .js files and skip those in node_modules
   module: {
     rules: [
@@ -30,7 +27,7 @@ module.exports = {
         loader: 'babel-loader',
         include: __dirname,
         exclude: /node_modules/,
-      },
+      }
     ],
   },
 }
