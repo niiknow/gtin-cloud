@@ -1,7 +1,5 @@
-import res      from './response'
-import saveToS3 from './saveToS3'
-import gtinPath from './gtinPath'
-import got      from 'got'
+import res        from './response'
+import storeTasks from './storeTasks'
 
 const debug = require('debug')('gtin-cloud')
 
@@ -23,14 +21,6 @@ export default async (event, context, callback) => {
   const url        = (qs.url || '').trim()
   const type       = (qs.type || '').trim()
   const rspHandler = res(context, callback)
-  const rawUrl     = url.split(/#|\?/)[0];
-  const fileName   = (qs.name || rawUrl.split('/').pop()).trim().toLowerCase();
-  const ext        = fileName.split('.').pop()
-  const vendor     = (event.pathParameters.vendor || '').toLowerCase()
-  const basePath   = gtinPath(gtin, vendor);
-  const body       = (event.body || '').trim()
-  const tasks      = []
-  let destPath     = ''
 
   // validate parameters
   if (type.length > 0 && url.length <= 0) {
@@ -38,33 +28,13 @@ export default async (event, context, callback) => {
   }
 
   debug(`begin ${type}: ${url}`)
+  const rst = storeTasks(gtin, url, type, event.body, event.pathParameters.vendor, name)
 
-  // handle image
-  if (type.indexOf('image') > -1) {
-    if (ext !== 'jpg' && ext !== 'jpeg') {
-      return rspHandler(`${fileName} extension must be jpg/jpeg`, 422)
-    }
-
-    // download and store image as index.jpg
-    destPath = basePath + 'index.jpg'
-    const fstream = got.stream(url)
-    tasks.push(saveToS3(destPath, fstream, 'image/jpeg'));
-  } else if (type.indexOf('media') > -1) {
-    // handle media
-    destPath = basePath + 'media/' + fileName
-    const fstream  = got.stream(url)
-    tasks.push(saveToS3(destPath, fstream));
-  } else if (type.length > 0) {
-    return rspHandler(`Unknown type ${type}`, 422)
+  if (rst.error) {
+    return rspHandler(rst.error, 422)
   }
 
-  // only store if body is a json
-  if (body.indexOf('{') > 0) {
-    tasks.push(saveToS3(basePath + 'index.json', event.body, 'application/json'));
-  }
+  await Promise.all(rst.tasks)
 
-  // process all async tasks
-  await Promise.all(tasks);
-
-  return rspHandler(`Uploaded as: ${destPath}`, 422)
+  return rspHandler(`Uploaded as: ${destPath}`)
 }
