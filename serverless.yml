@@ -23,6 +23,7 @@ provider:
   runtime: nodejs8.10
   stage: ${opt:stage, 'dev'}
   region: us-east-1
+  timeout: 60
   iamRoleStatements:
     - Effect: "Allow"
       Action:

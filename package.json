@@ -4,8 +4,8 @@
   "description": "GTIN cloud storage strategy ",
   "main": "handler.js",
   "scripts": {
-    "deploy": "sls deploy && sls s3deploy",
-    "deploy-prod": "sls deploy --stage prod && sls s3deploy --stage prod",
+    "deploy": "sls deploy",
+    "deploy-prod": "sls deploy --stage prod",
     "lint": "eslint --ext .js,.jsx ./",
     "lint-fix": "eslint --fix --ext .js,.jsx ./",
     "serverless": "node_modules/.bin/serverless",
