@@ -170,6 +170,7 @@ export default async (event, context, callback) => {
   const vendor     = (event.pathParameters.vendor || '').toLowerCase()
   const rspHandler = res(context, callback)
   const gtin       = (qs.q || '').trim()
+  const stash      = (qs.stash || false)
 
   if (gtin.length < 14) {
     return rspHandler(`${gtin} must be at least 14 characters`, 422)
@@ -179,13 +180,13 @@ export default async (event, context, callback) => {
 
   // json stringify because we expect an object
   if (vendor === 'eandata') {
-    const rst = await Handlers.eanDataRequest(gtin, true)
+    const rst = await Handlers.eanDataRequest(gtin, !!stash)
     return rspHandler(rst)
   } else if (vendor === 'itemmaster') {
-    const rst = await Handlers.itemMasterRequest(gtin, true)
+    const rst = await Handlers.itemMasterRequest(gtin, !!stash)
     return rspHandler(rst)
   } else if (vendor === 'kwikee') {
-    const rst = await Handlers.kwikeeRequest(gtin, true)
+    const rst = await Handlers.kwikeeRequest(gtin, !!stash)
     return rspHandler(rst)
   }
 
