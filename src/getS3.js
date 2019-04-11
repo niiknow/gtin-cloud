@@ -5,6 +5,7 @@ const s3 = new AWS.S3()
 
 export default (gtin, vendor = '') => {
   return new Promise((resolve, reject) => {
+    const key = gtinPath(gtin, vendor) + 'index.json'
 
     return s3.getObject({
       Bucket: process.env.AWS_BUCKET,
