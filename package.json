@@ -4,13 +4,12 @@
   "description": "GTIN cloud storage strategy ",
   "main": "handler.js",
   "scripts": {
-    "deploy": "sls deploy",
-    "deploy-prod": "sls deploy --stage prod",
-    "lint": "eslint --ext .js,.jsx ./",
-    "lint-fix": "eslint --fix --ext .js,.jsx ./",
     "serverless": "node_modules/.bin/serverless",
     "sls": "node_modules/.bin/serverless",
-    "service-info": "sls info",
+    "deploy": "sls deploy --stage prod",
+    "service-info": "sls info --stage prod",
+    "lint": "eslint --ext .js,.jsx ./",
+    "lint-fix": "eslint --fix --ext .js,.jsx ./",
     "local": "cross-env DEBUG=gtin-cloud SLS_DEBUG=* node_modules/.bin/serverless offline --stage dev",
     "test": "jest"
   },
