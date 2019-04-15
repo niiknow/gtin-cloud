@@ -24,6 +24,8 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: us-east-1
   timeout: 30
+  apiKeys:
+    - ${opt:stage, 'dev'}-key
   iamRoleStatements:
     - Effect: "Allow"
       Action:
