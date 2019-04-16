@@ -7,19 +7,19 @@ import getS3      from './getS3'
 const debug = require('debug')('gtin-cloud')
 
 class Handlers {
-  static async datakickRequest(gtin, storeData = false) {
+  static async datakickRequest(gtin, storeData = false, imageUrl = null) {
     try {
       const rst = await got(`https://www.datakick.org/api/items/${gtin}`)
       debug(rst.body)
 
       const obj = JSON.parse(rst.body)
-      let image   = null
+      let image = imageUrl
 
       if (!obj.gtin14) {
         return { error: 'request error', response: rst.body }
       }
 
-      if (obj.images[0]) {
+      if (!image && obj.images[0]) {
         image = obj.images[0].url
       }
 
@@ -28,7 +28,7 @@ class Handlers {
       // debug(itemJson)
       if (storeData) {
         // stash the data and image
-        const rsp = storeTasks(gtin, image, 'image', JSON.stringify(obj), 'datakick')
+        const rsp = storeTasks(gtin, imageUrl, 'image', JSON.stringify(obj), 'datakick')
         if (rsp.tasks) {
           await Promise.all(rsp.tasks)
         }
@@ -42,7 +42,7 @@ class Handlers {
     }
   }
 
-  static async eanDataRequest(gtin, storeData = false) {
+  static async eanDataRequest(gtin, storeData = false, imageUrl = null) {
     const query = {
       v: 3,
       find: `0000000000000${gtin}`.slice(-13),
@@ -69,7 +69,7 @@ class Handlers {
         // debug(itemJson)
         if (storeData) {
           // stash the data and image
-          const rsp = storeTasks(gtin, product.image, 'image', JSON.stringify(product), 'eandata')
+          const rsp = storeTasks(gtin, imageUrl || product.image, 'image', JSON.stringify(product), 'eandata')
           if (rsp.tasks) {
             await Promise.all(rsp.tasks)
           }
@@ -85,7 +85,7 @@ class Handlers {
     }
   }
 
-  static async itemMasterRequest(gtin, storeData = false) {
+  static async itemMasterRequest(gtin, storeData = false, imageUrl = null) {
     gtin = `0000000000000${gtin}`.slice(-14)
 
     const url = 'https://api.itemmaster.com/v2.2/item/'
@@ -98,7 +98,7 @@ class Handlers {
     const query = {
       upc: gtin,
       ef: 'jpg',
-      eip: 75,
+      eip: 72,
       epf: 1000,
       allImg: 'Y'
     }
@@ -111,12 +111,12 @@ class Handlers {
       })
 
       const obj = JSON.parse(json)
-      let image = null
+      let image = imageUrl
 
       if (obj.items && obj.items.item) {
         // console.log(JSON.stringify(obj.items.item, null, 2))
 
-        if (obj.items.item.media) {
+        if (!image && obj.items.item.media) {
           const medias = obj.items.item.media.medium
 
           if (Array.isArray(medias)) {
@@ -148,7 +148,7 @@ class Handlers {
     }
   }
 
-  static async kwikeeRequest(gtin, storeData = false) {
+  static async kwikeeRequest(gtin, storeData = false, imageUrl = null) {
 
     gtin = `0000000000000${gtin}`.slice(-14)
 
@@ -164,12 +164,14 @@ class Handlers {
       const rsts  = await Promise.all([r1, r2])
       const obj   = JSON.parse(rsts[0].body)
       const idata = JSON.parse(rsts[1].body)
-      let image   = null
+      let image   = imageUrl
 
-      if (idata.kwikeeApiV3 && idata.kwikeeApiV3.gtin)
+      if (!image && idata.kwikeeApiV3 && idata.kwikeeApiV3.gtin)
       {
         obj.media = idata.kwikeeApiV3.gtin
-        image     = obj.media[0].mainImageAsset.files[0].url
+        if (obj.media[0] && obj.media[0].mainImageAsset && obj.media[0].mainImageAsset.files[0]) {
+          image = obj.media[0].mainImageAsset.files[0].url
+        }
       }
 
       if (storeData) {
@@ -207,6 +209,7 @@ export default async (event, context, callback) => {
   const gtin       = (qs.q || '').trim()
   const force      = !!(qs.force || false)
   const nostore    = !!(qs.nostore || false)
+  const imageUrl   = qs.url
   // force - to force fresh data, do not use cache
   // nostore - true to not save fresh data to cache
 
@@ -233,16 +236,16 @@ export default async (event, context, callback) => {
 
   // json stringify because we expect an object
   if (vendor === 'datakick') {
-    const rst = await Handlers.datakickRequest(gtin, !nostore)
+    const rst = await Handlers.datakickRequest(gtin, !nostore, url)
     return rspHandler(rst)
   } else if (vendor === 'eandata') {
-    const rst = await Handlers.eanDataRequest(gtin, !nostore)
+    const rst = await Handlers.eanDataRequest(gtin, !nostore, url)
     return rspHandler(rst)
   } else if (vendor === 'itemmaster') {
-    const rst = await Handlers.itemMasterRequest(gtin, !nostore)
+    const rst = await Handlers.itemMasterRequest(gtin, !nostore, url)
     return rspHandler(rst)
   } else if (vendor === 'kwikee') {
-    const rst = await Handlers.kwikeeRequest(gtin, !nostore)
+    const rst = await Handlers.kwikeeRequest(gtin, !nostore, url)
     return rspHandler(rst)
   }
 
