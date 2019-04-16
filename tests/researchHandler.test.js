@@ -25,3 +25,4 @@ test('kwikee lookup 00018200281372', async () => {
   // console.log(rst)
   expect(rst).not.toBeNull()
 });
+

@@ -13,22 +13,22 @@ class Handlers {
       debug(rst.body)
 
       const obj = JSON.parse(rst.body)
+      obj.gtin  = gtin
       let image = imageUrl
 
       if (!obj.gtin14) {
         return { error: 'request error', response: rst.body }
       }
 
-      if (!image && obj.images[0]) {
+      if (image === null && obj.images[0]) {
         image = obj.images[0].url
       }
-
 
       // console.log(obj)
       // debug(itemJson)
       if (storeData) {
         // stash the data and image
-        const rsp = storeTasks(gtin, imageUrl, 'image', JSON.stringify(obj), 'datakick')
+        const rsp = storeTasks(gtin, image, 'image', JSON.stringify(obj), 'datakick')
         if (rsp.tasks) {
           await Promise.all(rsp.tasks)
         }
@@ -54,7 +54,7 @@ class Handlers {
       const rst = await got('https://eandata.com/feed/', { query })
       debug(rst.body)
 
-      const obj = JSON.parse(rst.body)
+      const obj   = JSON.parse(rst.body)
       let product = null
 
       if (!obj.product) {
@@ -63,7 +63,8 @@ class Handlers {
 
       if (obj.product.attributes.product !== 'Unknown') {
         debug(`found ${gtin}`)
-        product = obj.product
+        product      = obj.product
+        product.gtin = gtin
 
         // console.log(obj)
         // debug(itemJson)
@@ -111,12 +112,13 @@ class Handlers {
       })
 
       const obj = JSON.parse(json)
+      obj.gtin  = gtin
       let image = imageUrl
 
       if (obj.items && obj.items.item) {
         // console.log(JSON.stringify(obj.items.item, null, 2))
 
-        if (!image && obj.items.item.media) {
+        if (image === null && obj.items.item.media) {
           const medias = obj.items.item.media.medium || obj.items.item.media
 
           if (Array.isArray(medias)) {
@@ -164,9 +166,10 @@ class Handlers {
       const rsts  = await Promise.all([r1, r2])
       const obj   = JSON.parse(rsts[0].body)
       const idata = JSON.parse(rsts[1].body)
+      obj.gtin    = gtin
       let image   = imageUrl
 
-      if (!image && idata.kwikeeApiV3 && idata.kwikeeApiV3.gtin)
+      if (image === null && idata.kwikeeApiV3 && idata.kwikeeApiV3.gtin)
       {
         obj.media = idata.kwikeeApiV3.gtin
         if (obj.media[0] && obj.media[0].mainImageAsset && obj.media[0].mainImageAsset.files[0]) {
