@@ -35,7 +35,7 @@ class Handlers {
       }
 
       debug(`completed ${gtin}`)
-      return product || `${gtin} not found`
+      return obj
     } catch(e) {
       debug(JSON.stringify(e, null, 2))
       return { error: 'request error' }
@@ -126,8 +126,8 @@ class Handlers {
                 image = media.url._text
               }
             })
-          } else if (medias) {
-            image = media.url._text
+          } else if (medias && medias.url) {
+            image = medias.url._text
           }
         }
 
