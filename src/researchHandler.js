@@ -167,13 +167,14 @@ class Handlers {
       const obj   = JSON.parse(rsts[0].body)
       const idata = JSON.parse(rsts[1].body)
       obj.gtin    = gtin
+      obj.media   = idata
       let image   = imageUrl
 
       if (image === null && idata.kwikeeApiV3 && idata.kwikeeApiV3.gtin)
       {
-        obj.media = idata.kwikeeApiV3.gtin
-        if (obj.media[0] && obj.media[0].mainImageAsset && obj.media[0].mainImageAsset.files[0]) {
-          image = obj.media[0].mainImageAsset.files[0].url
+        obj.media = idata.kwikeeApiV3.gtin[0] || idata.kwikeeApiV3.gtin
+        if (obj.media.mainImageAsset && obj.media.mainImageAsset.files[0]) {
+          image = obj.media.mainImageAsset.files[0].url
         }
       }
 
