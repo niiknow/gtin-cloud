@@ -117,7 +117,7 @@ class Handlers {
         // console.log(JSON.stringify(obj.items.item, null, 2))
 
         if (!image && obj.items.item.media) {
-          const medias = obj.items.item.media.medium
+          const medias = obj.items.item.media.medium || obj.items.item.media
 
           if (Array.isArray(medias)) {
             medias.forEach((media) => {
@@ -126,7 +126,7 @@ class Handlers {
                 image = media.url._text
               }
             })
-          } else if (medias && medias.url) {
+          } else if (medias.url) {
             image = medias.url._text
           }
         }
