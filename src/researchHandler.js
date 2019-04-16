@@ -236,16 +236,16 @@ export default async (event, context, callback) => {
 
   // json stringify because we expect an object
   if (vendor === 'datakick') {
-    const rst = await Handlers.datakickRequest(gtin, !nostore, url)
+    const rst = await Handlers.datakickRequest(gtin, !nostore, imageUrl)
     return rspHandler(rst)
   } else if (vendor === 'eandata') {
-    const rst = await Handlers.eanDataRequest(gtin, !nostore, url)
+    const rst = await Handlers.eanDataRequest(gtin, !nostore, imageUrl)
     return rspHandler(rst)
   } else if (vendor === 'itemmaster') {
-    const rst = await Handlers.itemMasterRequest(gtin, !nostore, url)
+    const rst = await Handlers.itemMasterRequest(gtin, !nostore, imageUrl)
     return rspHandler(rst)
   } else if (vendor === 'kwikee') {
-    const rst = await Handlers.kwikeeRequest(gtin, !nostore, url)
+    const rst = await Handlers.kwikeeRequest(gtin, !nostore, imageUrl)
     return rspHandler(rst)
   }
 
