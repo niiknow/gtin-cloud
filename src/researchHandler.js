@@ -181,7 +181,7 @@ class Handlers {
       obj.gtin      = gtin
       obj.media     = idata
       obj.gtin_path = gtinPath(gtin)
-      let image   = imageUrl
+      let image     = imageUrl
 
       if (image === null && idata.kwikeeApiV3 && idata.kwikeeApiV3.gtin)
       {

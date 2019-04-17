@@ -28,7 +28,7 @@ export default async (event, context, callback) => {
   }
 
   debug(`begin ${type}: ${url}`)
-  const rsp = storeTasks(gtin, url, type, event.body, event.pathParameters.vendor, qs.name)
+  const rsp = storeTasks(gtin, url, type, event.body, qs.vendor, qs.name)
 
   if (rsp.error) {
     return rspHandler(rsp.error, 422)
