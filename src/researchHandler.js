@@ -11,10 +11,11 @@ class Handlers {
   static async datakickRequest(gtin, storeData = false, imageUrl = null) {
     try {
       const rst = await got(`https://www.datakick.org/api/items/${gtin}`)
-      debug(rst.body)
+      // debug(rst.body)
 
-      const obj = JSON.parse(rst.body)
-      obj.gtin  = gtin
+      const obj     = JSON.parse(rst.body)
+      obj.gtin      = gtin
+      obj.gtin_path = gtinPath(gtin)
       let image = imageUrl
 
       if (!obj.gtin14) {
@@ -54,7 +55,7 @@ class Handlers {
 
     try {
       const rst = await got('https://eandata.com/feed/', { query })
-      debug(rst.body)
+      // debug(rst.body)
 
       const obj   = JSON.parse(rst.body)
       let product = null
@@ -144,7 +145,7 @@ class Handlers {
 
         if (storeData) {
           // stash the data and image
-          const rsp = storeTasks(gtin, image, 'image', JSON.stringify(obj.items.item), 'itemmaster', null, { headers })
+          const rsp = storeTasks(gtin, image, 'image', JSON.stringify(product), 'itemmaster', null, { headers })
           if (rsp.tasks) {
             await Promise.all(rsp.tasks)
           }
