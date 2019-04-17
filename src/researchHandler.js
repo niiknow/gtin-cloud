@@ -3,6 +3,7 @@ import xmljs      from 'xml-js'
 import res        from './response'
 import storeTasks from './storeTasks'
 import getS3      from './getS3'
+import gtinPath   from './gtinPath'
 
 const debug = require('debug')('gtin-cloud')
 
@@ -61,8 +62,9 @@ class Handlers {
       if (!obj.product) {
         return { error: 'request error', response: rst.body }
       }
-      product       = obj.product
-      product.gtin  = gtin
+      product           = obj.product
+      product.gtin      = gtin
+      product.gtin_path = gtinPath(gtin)
 
       if (product.attributes.product !== 'Unknown') {
         debug(`found ${gtin}`)
@@ -113,15 +115,16 @@ class Handlers {
         ignoreDeclaration: true
       })
 
-      const obj = JSON.parse(json)
-      obj.gtin  = gtin
-      let image = imageUrl
+      const obj     = JSON.parse(json)
+      let product   = null
+      let image     = imageUrl
 
       if (obj.items && obj.items.item) {
         // console.log(JSON.stringify(obj.items.item, null, 2))
+        product = obj.items.item
 
-        if (image === null && obj.items.item.media) {
-          const medias = obj.items.item.media.medium || obj.items.item.media
+        if (image === null && product.media) {
+          const medias = product.media.medium || product.media
 
           if (Array.isArray(medias)) {
             medias.forEach((media) => {
@@ -135,7 +138,9 @@ class Handlers {
           }
         }
 
-        obj.items.item.image = image
+        product.gtin      = gtin
+        product.image     = image
+        product.gtin_path = gtinPath(gtin)
 
         if (storeData) {
           // stash the data and image
@@ -144,10 +149,12 @@ class Handlers {
             await Promise.all(rsp.tasks)
           }
         }
+      } else {
+        return `${gtin} not found`
       }
 
       debug(`completed ${gtin}`)
-      return obj.items.item || `${gtin} not found`
+      return product
     } catch(e) {
       debug(JSON.stringify(e, null, 2))
       return { error: 'request error' }
@@ -165,13 +172,14 @@ class Handlers {
     }
 
     try {
-      const r1    = got(url, { headers })
-      const r2    = got(iurl, { headers })
-      const rsts  = await Promise.all([r1, r2])
-      const obj   = JSON.parse(rsts[0].body)
-      const idata = JSON.parse(rsts[1].body)
-      obj.gtin    = gtin
-      obj.media   = idata
+      const r1      = got(url, { headers })
+      const r2      = got(iurl, { headers })
+      const rsts    = await Promise.all([r1, r2])
+      const obj     = JSON.parse(rsts[0].body)
+      const idata   = JSON.parse(rsts[1].body)
+      obj.gtin      = gtin
+      obj.media     = idata
+      obj.gtin_path = gtinPath(gtin)
       let image   = imageUrl
 
       if (image === null && idata.kwikeeApiV3 && idata.kwikeeApiV3.gtin)
