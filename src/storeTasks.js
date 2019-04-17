@@ -15,7 +15,7 @@ export default (gtin, url, type, body, vendor = '', name = null, urlExtra = null
   vendor = (vendor || '').toLowerCase()
   body   = (body || '').trim()
 
-  const rawUrl     = (url || '').trim().split(/#|\?/)[0];
+  const rawUrl   = (url || '').trim().split(/#|\?/)[0];
   const basePath = gtinPath(gtin, vendor);
   const tasks    = []
   let destPath   = ''
