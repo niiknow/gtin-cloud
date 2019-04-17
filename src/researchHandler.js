@@ -261,5 +261,5 @@ export default async (event, context, callback) => {
 
   debug(`unknown vendor ${vendor}`)
 
-  rspHandler(`Unknown vendor: ${vendor}`, 422)
+  return rspHandler(`Unknown vendor: ${vendor}`, 422)
 }
