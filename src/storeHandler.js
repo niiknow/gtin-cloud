@@ -24,7 +24,7 @@ export default async (event, context, callback) => {
 
   // validate parameters
   if (type.length > 0 && url.length <= 0) {
-    return rspHandler(`URL querystring parameter is required for type of ${type}`, 422)
+    return rspHandler(`URL querystring parameter is required for type of ${type} - ${url}`, 422)
   }
 
   debug(`begin ${type}: ${url}`)

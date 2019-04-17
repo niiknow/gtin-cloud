@@ -27,14 +27,6 @@ provider:
   memorySize: 512
   apiKeys:
     - ${opt:stage, 'dev'}-key
-  usagePlan:
-    quota:
-      limit: 1000000
-      offset: 2
-      period: MONTH
-    throttle:
-      burstLimit: 2000
-      rateLimit: 100
   iamRoleStatements:
     - Effect: "Allow"
       Action:
