@@ -21,7 +21,8 @@ class Handlers {
       }
 
       if (image === null && obj.images[0]) {
-        image = obj.images[0].url
+        image     = obj.images[0].url
+        obj.image = image
       }
 
       // console.log(obj)
@@ -60,17 +61,18 @@ class Handlers {
       if (!obj.product) {
         return { error: 'request error', response: rst.body }
       }
+      product       = obj.product
+      product.gtin  = gtin
 
-      if (obj.product.attributes.product !== 'Unknown') {
+      if (product.attributes.product !== 'Unknown') {
         debug(`found ${gtin}`)
-        product      = obj.product
-        product.gtin = gtin
+        product.image = imageUrl || product.image
 
         // console.log(obj)
         // debug(itemJson)
         if (storeData) {
           // stash the data and image
-          const rsp = storeTasks(gtin, imageUrl || product.image, 'image', JSON.stringify(product), 'eandata')
+          const rsp = storeTasks(gtin, product.image, 'image', JSON.stringify(product), 'eandata')
           if (rsp.tasks) {
             await Promise.all(rsp.tasks)
           }
@@ -133,6 +135,8 @@ class Handlers {
           }
         }
 
+        obj.items.item.image = image
+
         if (storeData) {
           // stash the data and image
           const rsp = storeTasks(gtin, image, 'image', JSON.stringify(obj.items.item), 'itemmaster', null, { headers })
@@ -177,6 +181,8 @@ class Handlers {
           image = obj.media.mainImageAsset.files[0].url
         }
       }
+
+      obj.image = image
 
       if (storeData) {
         // console.log(image)
