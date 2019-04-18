@@ -16,7 +16,8 @@ class Handlers {
       const obj     = JSON.parse(rst.body)
       obj.gtin      = gtin
       obj.gtin_path = gtinPath(gtin)
-      let image = imageUrl
+      obj._ts       = (new Date()).getTime()
+      let image     = imageUrl
 
       if (!obj.gtin14) {
         return { error: 'request error', response: rst.body }
@@ -66,6 +67,7 @@ class Handlers {
       product           = obj.product
       product.gtin      = gtin
       product.gtin_path = gtinPath(gtin)
+      product._ts       = (new Date()).getTime()
 
       if (product.attributes.product !== 'Unknown') {
         debug(`found ${gtin}`)
@@ -142,6 +144,7 @@ class Handlers {
         product.gtin      = gtin
         product.image     = image
         product.gtin_path = gtinPath(gtin)
+        product._ts       = (new Date()).getTime()
 
         if (storeData) {
           // stash the data and image
@@ -181,6 +184,7 @@ class Handlers {
       obj.gtin      = gtin
       obj.media     = idata
       obj.gtin_path = gtinPath(gtin)
+      obj._ts       = (new Date()).getTime()
       let image     = imageUrl
 
       if (image === null && idata.kwikeeApiV3 && idata.kwikeeApiV3.gtin)
