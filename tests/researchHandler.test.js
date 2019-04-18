@@ -9,6 +9,7 @@ test('datakick lookup 00811102020236', async () => {
   expect(rst.gtin).toBe('00811102020236')
   expect(rst.image).not.toBeNull()
   expect(rst.gtin_path).not.toBeNull()
+  expect(rst._ts).not.toBeNull()
 });
 
 test('eandata lookup 03045320094084', async () => {
@@ -18,6 +19,7 @@ test('eandata lookup 03045320094084', async () => {
   expect(rst.gtin).toBe('03045320094084')
   expect(rst.image).not.toBeNull()
   expect(rst.gtin_path).not.toBeNull()
+  expect(rst._ts).not.toBeNull()
 });
 
 test('itemmaster lookup 00832544000501', async () => {
@@ -27,6 +29,7 @@ test('itemmaster lookup 00832544000501', async () => {
   expect(rst.gtin).toBe('00832544000501')
   expect(rst.image).not.toBeNull()
   expect(rst.gtin_path).not.toBeNull()
+  expect(rst._ts).not.toBeNull()
 });
 
 test('kwikee lookup 00018200281372', async () => {
@@ -36,5 +39,6 @@ test('kwikee lookup 00018200281372', async () => {
   expect(rst.gtin).toBe('00018200281372')
   expect(rst.image).not.toBeNull()
   expect(rst.gtin_path).not.toBeNull()
+  expect(rst._ts).not.toBeNull()
 });
 
