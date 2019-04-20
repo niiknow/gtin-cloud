@@ -28,6 +28,7 @@ A Content Delivery Network (CDN) would go a long way to help increase the perfor
 - [x] Tesco - https://dev.tescolabs.com/product/?gtin=%s
 - [x] DataKick - https://www.datakick.org/api/items/%s
 - [x] EAN Data - https://eandata.com/feed/?v=3&find=ean13&keycode=apikey&mode=json
+- [x] Open Food Facts - https://world.openfoodfacts.org/api/v0/product/%s.json
 - [ ] Search UPC - http://www.searchupc.com/handlers/upcsearch.ashx?request_type=3&upc=%s&access_token=%s
 - [ ] UPC ItemDB - https://api.upcitemdb.com/prod/trial/lookup?upc=%s
 - [ ] Barcodeable - https://www.barcodable.com/api/v1/%s/%s

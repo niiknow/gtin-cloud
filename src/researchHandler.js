@@ -221,7 +221,7 @@ class Handlers {
 
     const ean  = gtin.slice(-13)
     const url  = `https://dev.tescolabs.com/product/?gtin=${gtin}`
-    const iurl = `https://img.tesco.com/Groceries/pi/${ean.slice(-3)}/${ean}/IDShot_540x540.jpg`
+    const iurl = imageUrl || `https://img.tesco.com/Groceries/pi/${ean.slice(-3)}/${ean}/IDShot_540x540.jpg`
     const headers = {
       'Ocp-Apim-Subscription-Key': process.env.TESCO_KEY
     }
@@ -229,16 +229,19 @@ class Handlers {
     try {
       // get product data
       // check if image exists by EAN pattern
-      const r1      = got(url, { headers })
-      const r2      = got(iurl, { method: 'head' })
-      const rsts    = await Promise.all([r1, r2])
-      const obj     = JSON.parse(rsts[0].body).products[0]
+      const r1   = got(url, { headers })
+      const r2   = got(iurl, { method: 'head' })
+      const rsts = await Promise.all([r1, r2])
+      const obj  = JSON.parse(rsts[0].body).products[0]
 
       if (obj) {
         obj.gtin      = gtin
         obj.gtin_path = gtinPath(gtin)
         obj._ts       = (new Date()).toISOString()
-        obj.image     = rsts[1].statusCode === 404 ? imageUrl : iurl
+
+        if (rsts[1].statusCode !== 404) {
+          obj.image = iurl
+        }
 
         if (storeData) {
           // console.log(image)
@@ -256,6 +259,40 @@ class Handlers {
       return obj
     } catch(e) {
       // console.log(e)
+      debug(JSON.stringify(e, null, 2))
+      return { error: 'request error' }
+    }
+  }
+
+  static async openfoodfactsRequest(gtin, storeData = false, imageUrl = null) {
+    try {
+      const rst = await got(`https://world.openfoodfacts.org/api/v0/product/${gtin}.json`)
+      // debug(rst.body)
+
+      const obj = JSON.parse(rst.body).product
+
+      if (!obj) {
+        return `${gtin} not found`
+      }
+
+      obj.gtin      = gtin
+      obj.gtin_path = gtinPath(gtin)
+      obj._ts       = (new Date()).toISOString()
+      obj.image     = imageUrl || obj.image_url
+
+      // console.log(obj)
+      // debug(itemJson)
+      if (storeData) {
+        // stash the data and image
+        const rsp = storeTasks(gtin, obj.image, 'image', JSON.stringify(obj), 'openfoodfacts')
+        if (rsp.tasks) {
+          await Promise.all(rsp.tasks)
+        }
+      }
+
+      debug(`completed ${gtin}`)
+      return obj
+    } catch(e) {
       debug(JSON.stringify(e, null, 2))
       return { error: 'request error' }
     }
@@ -319,6 +356,9 @@ export default async (event, context, callback) => {
       return rspHandler(rst)
     } else if (vendor === 'tesco') {
       const rst = await Handlers.tescoRequest(gtin, !nostore, imageUrl)
+      return rspHandler(rst)
+    } else if (vendor === 'openfoodfacts') {
+      const rst = await Handlers.openfoodfactsRequest(gtin, !nostore, imageUrl)
       return rspHandler(rst)
     }
   } catch (e) {

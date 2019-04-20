@@ -69,3 +69,16 @@ describe('tesco-research-tests', () => {
   })
 })
 
+describe('openfoodfacts-research-tests', () => {
+
+  test('openfoodfacts lookup 03045320094084', async () => {
+    const rst = await handlers.tescoRequest('03045320094084', false)
+    // console.log(rst)
+    expect(rst).not.toBeNull()
+    expect(rst.gtin).toBe('03045320094084')
+    expect(rst.image).not.toBeNull()
+    expect(rst.gtin_path).not.toBeNull()
+    expect(rst._ts).not.toBeNull()
+  })
+})
+
