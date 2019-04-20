@@ -317,6 +317,9 @@ export default async (event, context, callback) => {
     } else if (vendor === 'kwikee') {
       const rst = await Handlers.kwikeeRequest(gtin, !nostore, imageUrl)
       return rspHandler(rst)
+    } else if (vendor === 'tesco') {
+      const rst = await Handlers.tescoRequest(gtin, !nostore, imageUrl)
+      return rspHandler(rst)
     }
   } catch (e) {
     return rspHandler({ error: e })
