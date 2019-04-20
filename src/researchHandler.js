@@ -214,6 +214,52 @@ class Handlers {
       return { error: 'request error' }
     }
   }
+
+  static async tescoRequest(gtin, storeData = false, imageUrl = null) {
+
+    gtin = `0000000000000${gtin}`.slice(-14)
+
+    const ean  = gtin.slice(-13)
+    const url  = `https://dev.tescolabs.com/product/?gtin=${gtin}`
+    const iurl = `https://img.tesco.com/Groceries/pi/${ean.slice(-3)}/${ean}/IDShot_540x540.jpg`
+    const headers = {
+      'Ocp-Apim-Subscription-Key': process.env.TESCO_KEY
+    }
+
+    try {
+      // get product data
+      // check if image exists by EAN pattern
+      const r1      = got(url, { headers })
+      const r2      = got(iurl, { method: 'head' })
+      const rsts    = await Promise.all([r1, r2])
+      const obj     = JSON.parse(rsts[0].body).products[0]
+
+      if (obj) {
+        obj.gtin      = gtin
+        obj.gtin_path = gtinPath(gtin)
+        obj._ts       = (new Date()).toISOString()
+        obj.image     = rsts[1].statusCode === 404 ? imageUrl : iurl
+
+        if (storeData) {
+          // console.log(image)
+          const rsp = storeTasks(gtin, obj.image, 'image', JSON.stringify(obj), 'tesco', `${gtin}.jpg`)
+          // console.log(rsp)
+          if (rsp.tasks) {
+            await Promise.all(rsp.tasks)
+          }
+        }
+      } else {
+        return `${gtin} not found`
+      }
+
+      debug(`completed ${gtin}`)
+      return obj
+    } catch(e) {
+      // console.log(e)
+      debug(JSON.stringify(e, null, 2))
+      return { error: 'request error' }
+    }
+  }
 }
 
 export const handlers = Handlers
@@ -257,19 +303,23 @@ export default async (event, context, callback) => {
     }
   }
 
-  // json stringify because we expect an object
-  if (vendor === 'datakick') {
-    const rst = await Handlers.datakickRequest(gtin, !nostore, imageUrl)
-    return rspHandler(rst)
-  } else if (vendor === 'eandata') {
-    const rst = await Handlers.eanDataRequest(gtin, !nostore, imageUrl)
-    return rspHandler(rst)
-  } else if (vendor === 'itemmaster') {
-    const rst = await Handlers.itemMasterRequest(gtin, !nostore, imageUrl)
-    return rspHandler(rst)
-  } else if (vendor === 'kwikee') {
-    const rst = await Handlers.kwikeeRequest(gtin, !nostore, imageUrl)
-    return rspHandler(rst)
+  try {
+    // json stringify because we expect an object
+    if (vendor === 'datakick') {
+      const rst = await Handlers.datakickRequest(gtin, !nostore, imageUrl)
+      return rspHandler(rst)
+    } else if (vendor === 'eandata') {
+      const rst = await Handlers.eanDataRequest(gtin, !nostore, imageUrl)
+      return rspHandler(rst)
+    } else if (vendor === 'itemmaster') {
+      const rst = await Handlers.itemMasterRequest(gtin, !nostore, imageUrl)
+      return rspHandler(rst)
+    } else if (vendor === 'kwikee') {
+      const rst = await Handlers.kwikeeRequest(gtin, !nostore, imageUrl)
+      return rspHandler(rst)
+    }
+  } catch (e) {
+    return rspHandler({ error: e })
   }
 
   debug(`unknown vendor ${vendor}`)
