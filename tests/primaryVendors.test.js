@@ -1,4 +1,4 @@
-import { handlers } from '../src/researchHandler'
+import handlers from '../src/primaryVendors'
 
 jest.setTimeout(30000)
 

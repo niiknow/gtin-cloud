@@ -1,9 +1,8 @@
-import got from 'got'
 import { handlers } from '../src/websiteVendors.js'
 
 jest.setTimeout(30000)
 
-describe("scrape-google", () => {
+describe('scrape-google', () => {
   test('scrape-google invalid 00819898012009', async () => {
     const rst = await handlers.googleshoppingRequest('00819898012009', false)
 
