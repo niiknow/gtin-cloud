@@ -51,6 +51,9 @@ A Content Delivery Network (CDN) would go a long way to help increase the perfor
 
 Please feel free to submit any API or Web scraping integration request.  We can discuss in the issue how to integrate them: Primary/Secondary/WebScraping etc...
 
+# Roadmap
+Possibly integrate `proxycrawl` or similar service?
+
 # API
 ### POST|GET /store/{gtin}?type=image&vendor=vendor&url=https://the.urlencoded.com/image.jpg
 POST or GET to store the GTIN data on AWS S3.  POST body will become `index.json` and `url` query string parameter is downloaded as `index.jpg`
