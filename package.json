@@ -1,6 +1,6 @@
 {
   "name": "gtin-cloud",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "GTIN cloud storage strategy",
   "main": "handler.js",
   "scripts": {
@@ -32,7 +32,7 @@
     "@babel/preset-env": "^7.4.3",
     "@babel/register": "^7.4.0",
     "@babel/runtime": "^7.4.3",
-    "aws-sdk": "^2.440.0",
+    "aws-sdk": "^2.441.0",
     "babel-loader": "^8.0.5",
     "babel-plugin-source-map-support": "^2.0.1",
     "copy-webpack-plugin": "^4.6.0",
