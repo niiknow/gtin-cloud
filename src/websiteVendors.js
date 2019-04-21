@@ -1,8 +1,9 @@
-import got      from 'got'
-import cherio   from 'cherio'
-import gtinPath from './gtinPath'
-import rua      from 'random-useragent'
-import scrapeIt from 'scrape-it'
+import got        from 'got'
+import cherio     from 'cherio'
+import gtinPath   from './gtinPath'
+import rua        from 'random-useragent'
+import scrapeIt   from 'scrape-it'
+import storeTasks from './storeTasks'
 
 const debug = require('debug')('gtin-cloud')
 
@@ -19,7 +20,7 @@ const getGoogleProductId = async (gtin) => {
 
     const re = /<a[^>]+href=\"\/shopping\/product\/(.*?)\"[^>]*>/g
     const m  = re.exec(rst.body)
-    if (m[1]) {
+    if (m[1] && m[1].indexOf('?') > 0) {
       return m[1].split('?')[0]
     }
 
@@ -34,7 +35,7 @@ const getGoogleProductId = async (gtin) => {
 const scrapeGoogleShopping = async (pid) => {
   try {
     // we want the biggest image possible, otherwise add '/specs' to url
-    // to get product Ingredients, Warnings, Nutritions, Brand, etc..
+    // to get product Nutritions, Brand, etc..
     const url = `https://www.google.com/shopping/product/${pid}`
     const rst = await got.get(url, {
       headers: {
@@ -50,17 +51,6 @@ const scrapeGoogleShopping = async (pid) => {
       description: '#product-description-full',
       image_url: {
         selector: '#pp-altimg-init-main img', attr: 'src'
-      },
-      attributes: {
-        listItem: '.attr-attributes > .shop__secondary > span'
-      },
-      images: {
-        listItem: 'a.sh-mo__image',
-        data: {
-          url: { attr: 'data-image' },
-          type: { attr: 'data-type' },
-          index: { attr: 'data-index' }
-        }
       },
       prices: {
         listItem: '#summary-prices span'
@@ -79,6 +69,17 @@ const scrapeGoogleShopping = async (pid) => {
       },
       specs: {
         listItem: '#specs .section-inner span'
+      },
+      attributes: {
+        listItem: '.attr-attributes > .shop__secondary > span'
+      },
+      images: {
+        listItem: 'a.sh-mo__image',
+        data: {
+          url: { attr: 'data-image' },
+          type: { attr: 'data-type' },
+          index: { attr: 'data-index' }
+        }
       }
     }
 
@@ -95,10 +96,10 @@ const scrapeGoogleShopping = async (pid) => {
 }
 
 class Handlers {
-  static async googleRequest(gtin, storeData = false, imageUrl = null) {
+  static async googleshoppingRequest(gtin, storeData = false, imageUrl = null) {
     try {
       const pid = await getGoogleProductId(gtin)
-      let obj = null
+      let obj   = null
 
       if (pid && pid.length > 0) {
         obj           = await scrapeGoogleShopping(pid)
@@ -106,10 +107,19 @@ class Handlers {
         obj.gtin_path = gtinPath(gtin)
         obj._ts       = (new Date()).toISOString()
         obj.image     = imageUrl || obj.image_url
+
+        if (storeData) {
+          // stash the data and image
+          const rsp = storeTasks(gtin, obj.image, 'image', JSON.stringify(obj), 'googleshopping')
+          if (rsp.tasks) {
+            await Promise.all(rsp.tasks)
+          }
+        }
       } else {
         return `${gtin} not found`
       }
 
+      debug(`completed ${gtin}`)
       return obj
     } catch (e) {
       debug(JSON.stringify(e, null, 2))
