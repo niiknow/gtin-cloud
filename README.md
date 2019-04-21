@@ -66,7 +66,7 @@ The optional `vendor` parameter identify that this is to store Vendor's specific
 # Dicussion/Analysis
 > What we found during our API Integration with reguards to how other are storing their GTIN data
 
-1. Tescolabs - We noticed that Tescolabs store image using last 3 digits of EAN number.  Example: https://img.tesco.com/Groceries/pi/404/404/IDShot_540x540.jpg
+1. Tescolabs - We noticed that Tescolabs store image using last 3 digits of EAN number.  Example: https://img.tesco.com/Groceries/pi/886/5000157024886/IDShot_540x540.jpg
   - Advantages: This may actually have faster cloud storage access than our strategy.
   - Disadvantages: The downside is would be slower/harder to browse a local folder because of too many objects in each folder. 
 2. EANDATA - Like us, EANDATA segment its folder into 3 digits of a 13 digits EAN. It store the primary image as a full EAN number with the image extension. Example: https://eandata.com/image/products/004/900/000/0049000006582.jpg  
