@@ -1,7 +1,8 @@
-import res     from './response'
-import getS3   from './getS3'
-import primary from './primaryVendors'
-import website from './websiteVendors'
+import res       from './response'
+import getS3     from './getS3'
+import primary   from './primaryVendors'
+import website   from './websiteVendors'
+import secondary from './secondaryVendors'
 
 const debug = require('debug')('gtin-cloud')
 
@@ -66,6 +67,12 @@ export default async (event, context, callback) => {
       return rspHandler(rst)
     } else if (vendor === 'googleshopping') {
       const rst = await website.googleshoppingRequest(gtin, !nostore, imageUrl)
+      return rspHandler(rst)
+    }
+
+    // handle secondary vendors
+    if (vendor === 'digiteyes') {
+      const rst = await secondary.digiteyesRequest(gtin, !nostore, imageUrl)
       return rspHandler(rst)
     }
   } catch (e) {
