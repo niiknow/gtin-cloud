@@ -254,4 +254,4 @@ class Handlers {
   }
 }
 
-export const handlers = Handlers
+export default Handlers
