@@ -76,5 +76,8 @@ The optional `vendor` parameter identify that this is to store Vendor's specific
   - Advantages: Like us, this make it easier to browse.  It is also easier for website vendor to parse when using EAN as number.  One can easily identify the image EAN because it can exists without the folder structure. It can also have good performance for cloud storage access.
   - Disadvantages: We find that, most of the time, Company Prefix digit (CP)/first digit in EAN is 0.  Not using this digit in folder struction may increase cloud storage access/segmentation.
 
+# Disclaimer
+This project API integration code to various Vendors are for demonstration and educational purpose only.  The code are written very generic; in such way, that may violate certain Vendor's API usage policy.  This is the reason why we segment Vendor data so you can purge per request of any Vendor.  We are not responsible for any mis-used of Vendor's API.  User of our code must understand, comply, and are fully responsible for all usage of any external Vendor's API policy.
+
 # MIT
 See [LICENSE](LICENSE) file.
