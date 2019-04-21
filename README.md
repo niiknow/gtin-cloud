@@ -43,11 +43,13 @@ A Content Delivery Network (CDN) would go a long way to help increase the perfor
 - [ ] Barcodeable - https://www.barcodable.com/api/v1/%s/%s
 - [ ] Walmart - https://api.walmartlabs.com/v1/items?apiKey=%s&upc=%s
 - [ ] USDA - https://ndb.nal.usda.gov/ndb/search/list?qlookup=%s
+- [ ] Boycott - https://www.buycott.com/upc/%s, example: https://www.buycott.com/upc/078732004245
 - [ ] EBAY
 - [ ] BestBuy
 - [ ] Amazon
 - [ ] Target
-- [ ] Boycott - https://www.buycott.com/upc/%s, example: https://www.buycott.com/upc/078732004245
+
+Please feel free to submit any API or Web scraping integration request.  We can discuss in the issue how to integrate them: Primary/Secondary/WebScraping etc...
 
 # API
 ### POST|GET /store/{gtin}?type=image&vendor=vendor&url=https://the.urlencoded.com/image.jpg
@@ -61,10 +63,6 @@ The optional `vendor` parameter identify that this is to store Vendor's specific
 3. *nostore* - default is 0; set to 1 to not cache the research result
 4. *q* - the gtin
 5. *url* - optional: if you have the image URL already, pass it in to use instead of trying to perform additional research/API calls.  Sometime, Vendor API requires multiple call to get both image and gtin.  This help reduce the research API calls; so to not exceed Vendor's API rate limit.
-
-# TODO
-- [ ] More research API integration coming soon...
-- [ ] Find even more API.  Please open an issue and make some suggestion if you know any?
 
 # Dicussion/Analysis
 > What we found during our API Integration with reguards to how other are storing their GTIN data
