@@ -65,14 +65,14 @@ The optional `vendor` parameter identify that this is to store Vendor's specific
 5. *url* - optional: if you have the image URL already, pass it in to use instead of trying to perform additional research/API calls.  Sometime, Vendor API requires multiple call to get both image and gtin.  This help reduce the research API calls; so to not exceed Vendor's API rate limit.
 
 # Dicussion/Analysis
-> What we found during our API Integration with reguards to how other are storing their GTIN data
+> What we found during our API Integration with reguard to how others are storing their GTIN data
 
 1. Tescolabs - We noticed that Tescolabs store image using last 3 digits of EAN number.  Example: https://img.tesco.com/Groceries/pi/886/5000157024886/IDShot_540x540.jpg
   - Advantages: This may actually have faster cloud storage access than our strategy.
-  - Disadvantages: The downside is would be slower/harder to browse a local folder because of too many objects in each folder. 
+  - Disadvantages: The downside would be slower/harder to browse a local folder because of too many objects in each folder. 
 2. EANDATA - Like us, EANDATA segment its folder into 3 digits of a 13 digits EAN. It store the primary image as a full EAN number with the image extension. Example: https://eandata.com/image/products/004/900/000/0049000006582.jpg  
-  - Advantages: Like us, this make it easier to browse.  It is also easier for website vendor to parse when using EAN as number.  One can easily identify the image EAN because it can exists without the folder structure. It can also have good performance for cloud storage access.
-  - Disadvantages: We find that, most of the time, Company Prefix digit (CP)/first digit in EAN is 0.  Not using this digit in folder struction may increase cloud storage access/segmentation.
+  - Advantages: Like us, this make it easier to browse.  It is also easier for website vendor to parse when using EAN as number.  User can easily identify the image EAN because it can exists without the folder structure. It can also have good performance for cloud storage access.
+  - Disadvantages: We find that, most of the time, Company Prefix digit (CP)/first digit in EAN is 0 (for/when working with US product/item).  Not using this digit in folder structure may increase cloud storage access/segmentation.
 
 # Disclaimer
 This project API integration code are written very generic; in such way, that may violate certain Vendor's API usage policy.  This is the reason why we segment Vendor data so you can purge per request of any Vendor.  We are not responsible for any mis-used of Vendor's API.  User of our code must understand, comply, and are fully responsible for all usage of any external Vendor's API policy.
