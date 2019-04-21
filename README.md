@@ -1,14 +1,14 @@
 # GTIN Cloud
-> Without using a database, how would you store and access Item informations by simply providing its GTIN Number?
+> Without using a database, how would you store and access Item informations by only its [GTIN](https://en.wikipedia.org/wiki/Global_Trade_Item_Number)?
 
-We would need to create a convention to store the data in folder structures that are easy to access, without sacrificing performance.
+We need to create a folder storage convention, that are easy to access without sacrificing performance.
 
 # Storage Stragegy
-Let say you have a ficticious GTIN number 00123456789012.  Then the folder path for this GTIN number would be: 123/456/789/00123456789012/
+Let say you have a ficticious GTIN number 00123456789012.  Then the folder path for this would be: 123/456/789/00123456789012/
 
 1. Drop the first to 2 digits (00) - these are usually package and country identifier
 2. Split the next 9 numbers into 3 digits folder structure - these are usually the Company Prefix (CP)
-3. And store image as index.jpg and data as index.json in the GTIN folder/path: 123/456/789/00123456789012/index.jpg & 123/456/789/00123456789012/index.json
+3. And store image and data with the full GTIN folder path, example: 123/456/789/00123456789012/(index.jpg/index.json)
 
 # The Power of 3s
 - We know that, when storing in the cloud like AWS S3, the first 3 characters identify the partition it use to store the data.  This improve the speed of access.
@@ -33,6 +33,7 @@ A Content Delivery Network (CDN) would go a long way to help increase the perfor
 - [x] DataKick - https://www.datakick.org/api/items/%s
 - [x] EAN Data - https://eandata.com/feed/?v=3&find=ean13&keycode=apikey&mode=json
 - [x] Open Food Facts - https://world.openfoodfacts.org/api/v0/product/%s.json
+- [ ] USDA - https://ndb.nal.usda.gov/ndb/search/list?qlookup=%s
 
 **Secondary**
 > APIs with low daily/monthly limit.  These vendors can be use on-demand since it would be costly to use them for pre-cache.
@@ -61,6 +62,16 @@ The optional `vendor` parameter identify that this is to store Vendor's specific
 # TODO
 - [ ] More research API integration coming soon...
 - [ ] Find even more API.  Please open an issue and make some suggestion if you know any?
+
+# Dicussion/Analysis
+> What we found during our API Integration researches
+
+1. Tescolabs - We noticed that Tescolabs store image using last 3 digits of EAN number.  
+  - Advantages: This may actually provide faster data access for cloud storage than our strategy.
+  - Disadvantages: The downside is that it would be harder to browse a local folder because it would have more than 1000 objects. 
+2. EANDATA - Like us, segment its folder into 3 digits of a 13 digits EAN. It store the primary image as a full EAN number with the image extension. Example: https://eandata.com/image/products/004/900/000/0049000006582.jpg  
+  - Advantages: Like us, this make it easier to browse.  It is also easier for website vendor to parse when using EAN as number.  One can easily identify the image EAN because it can exists without the folder structure. It can also have good performance for cloud storage access.
+  - Disadvantages: We find that, most of the time, Company Prefix digit (CP)/first digit in EAN is 0.  Not using this digit in folder struction may increase cloud storage access/segmentation.
 
 # MIT
 See [LICENSE](LICENSE) file.
