@@ -41,8 +41,8 @@ A Content Delivery Network (CDN) would go a long way to help increase the perfor
 - [ ] Barcodeable - https://www.barcodable.com/api/v1/%s/%s
 - [ ] Walmart - https://api.walmartlabs.com/v1/items?apiKey=%s&upc=%s
 
-**Web Scraping**
-> These are mostly likely limitless; though there may be complications because Website data, attribution, and formattings may change on-the-fly.  Some of these Vendors, such as ShopRite, has better `schema.org` SEO attribution making it easier to scrape.
+**Website Scraping**
+> These are most likely limitless; though there may be complications because Website data, attribution, and formattings may change on-the-fly.  Some of these Vendors, such as ShopRite, has better `schema.org` SEO attribution making it easier to scrape.
 - [ ] ShopRite - http://www.shoprite.com/pd/-/-/-/%s/
 
 # API
