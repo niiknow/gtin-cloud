@@ -1,5 +1,5 @@
 # GTIN Cloud
-> Without using a database, how would you store and access Item informations by only its [GTIN](https://en.wikipedia.org/wiki/Global_Trade_Item_Number)?
+> Without using a database, how would one store and access Item informations by its [GTIN](https://en.wikipedia.org/wiki/Global_Trade_Item_Number)?
 
 We need to create a folder storage convention, that are easy to access without sacrificing performance.
 
@@ -75,9 +75,9 @@ The optional `vendor` parameter identify that this is to store Vendor's specific
   - Disadvantages: We find that, most of the time, Company Prefix digit (CP)/first digit in EAN is 0 (for/when working with US product/item).  Not using this digit in folder structure may increase cloud storage access/segmentation.
 
 # Disclaimer
-This project API integration code are written very genericly; in such way, that may violate certain Vendor's API and Datausage policy.  This is the reason why we segment Vendor data so User can purge per request of any Vendor.  We also take additional step to segment API types, Primary/Secondary, to help User comply with majority of API.  
+This project API integration code are written very genericly; in such way, that may violate certain Vendor's API and Data Usage Policy.  This is the reason why we segment Vendor data so User can purge per request of any Vendor.  We also take additional step to segment API types, Primary/Secondary, to help User comply with majority of API.  
 
-We are not responsible for any mis-uses of Vendor's API.  User of our code must understand, fully comply and responsible for all external Vendor's API and Data usage policy.
+We are not responsible for any mis-uses of Vendor's API.  User of our code must understand, fully comply and responsible for all external Vendor's API and Data Usage Policy.
 
 # MIT
 See [LICENSE](LICENSE) file.
