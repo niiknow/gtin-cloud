@@ -37,17 +37,17 @@ A Content Delivery Network (CDN) would go a long way to help increase the perfor
 
 **Secondary**
 > APIs with low daily/monthly limit.  These vendors can be use on-demand since it would be costly to use them for pre-cache.  Also, some of these do not include image such as USDA and Nutrition APIs.
+- [x] DigitEyes - https://www.digit-eyes.com/gtin/v2_0/?upcCode=%s&field_names=all&language=en&app_key=%s&signature=%s
 - [ ] Search UPC - http://www.searchupc.com/handlers/upcsearch.ashx?request_type=3&upc=%s&access_token=%s
 - [ ] UPC ItemDB - https://api.upcitemdb.com/prod/trial/lookup?upc=%s
 - [ ] Barcodeable - https://www.barcodable.com/api/v1/%s/%s
 - [ ] Walmart - https://api.walmartlabs.com/v1/items?apiKey=%s&upc=%s
 - [ ] USDA - https://ndb.nal.usda.gov/ndb/search/list?qlookup=%s
-- [ ] ebay
+- [ ] EBAY
 - [ ] BestBuy
 - [ ] Amazon
 - [ ] Target
 - [ ] Boycott - https://www.buycott.com/upc/%s, example: https://www.buycott.com/upc/078732004245
-- [ ] DigitEyes - www.digit-eyes.com/upcCode/%s.html, example: http://www.digit-eyes.com/upcCode/0078732004245.html
 
 # API
 ### POST|GET /store/{gtin}?type=image&vendor=vendor&url=https://the.urlencoded.com/image.jpg
