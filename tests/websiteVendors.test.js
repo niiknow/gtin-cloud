@@ -1,4 +1,4 @@
-import { handlers } from '../src/websiteVendors.js'
+import handlers from '../src/websiteVendors.js'
 
 jest.setTimeout(30000)
 
