@@ -10,18 +10,6 @@ describe('scrape-google', () => {
     expect(rst).toBe('00819898012009 not found')
   })
 
-  test('scrape-google 00819898012008', async () => {
-    const rst = await handlers.googleshoppingRequest('00819898012008', false)
-
-    // console.log(rst)
-    expect(rst).not.toBeNull()
-    expect(rst.gtin).toBe('00819898012008')
-    expect(rst.image).not.toBeNull()
-    expect(rst.image.length > 0).toBe(true)
-    expect(rst.gtin_path).not.toBeNull()
-    expect(rst._ts).not.toBeNull()
-  })
-
   test('scrape-google 00602652171840', async () => {
     const rst = await handlers.googleshoppingRequest('00602652171840', false)
 
@@ -34,4 +22,3 @@ describe('scrape-google', () => {
     expect(rst._ts).not.toBeNull()
   })
 })
-
