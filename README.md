@@ -26,7 +26,7 @@ A Content Delivery Network (CDN) would go a long way to help increase the perfor
 > This section introduce pulling data from various vendors.  We segment the Vendor's storage path to help with data retrieval and/or purge if requested by the Vendor.
 
 **Primary**
-> APIs with basically limitless calls and has/return an image.  You can setup job to pre-cache your data based on your GTIN database.
+> APIs with basically limitless calls and return an image.  You can setup job to pre-cache your data based on some GTIN database.
 - [x] Item Master - https://api.itemmaster.com/v2.2/item/?upc=gtin&ef=jpg&eip=75&epf=1000&allImg=Y
 - [x] Kwikee - https://api.kwikee.com/public/v3/data/gtin/%s
 - [x] Tesco - https://dev.tescolabs.com/product/?gtin=%s
