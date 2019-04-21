@@ -75,7 +75,9 @@ The optional `vendor` parameter identify that this is to store Vendor's specific
   - Disadvantages: We find that, most of the time, Company Prefix digit (CP)/first digit in EAN is 0 (for/when working with US product/item).  Not using this digit in folder structure may increase cloud storage access/segmentation.
 
 # Disclaimer
-This project API integration code are written very genericly; in such way, that may violate certain Vendor's API usage policy.  This is the reason why we segment Vendor data so User can purge per request of any Vendor.  We are not responsible for any mis-uses of Vendor's API.  User of our code must understand, fully comply and responsible for all external Vendor's API and Data usage policy.
+This project API integration code are written very genericly; in such way, that may violate certain Vendor's API and Datausage policy.  This is the reason why we segment Vendor data so User can purge per request of any Vendor.  We also take additional step to segment API types, Primary/Secondary, to help User comply with majority of API.  
+
+We are not responsible for any mis-uses of Vendor's API.  User of our code must understand, fully comply and responsible for all external Vendor's API and Data usage policy.
 
 # MIT
 See [LICENSE](LICENSE) file.
