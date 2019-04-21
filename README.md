@@ -66,10 +66,10 @@ The optional `vendor` parameter identify that this is to store Vendor's specific
 # Dicussion/Analysis
 > What we found during our API Integration researches
 
-1. Tescolabs - We noticed that Tescolabs store image using last 3 digits of EAN number.  
-  - Advantages: This may actually provide faster data access for cloud storage than our strategy.
-  - Disadvantages: The downside is that it would be harder to browse a local folder because it would have more than 1000 objects. 
-2. EANDATA - Like us, segment its folder into 3 digits of a 13 digits EAN. It store the primary image as a full EAN number with the image extension. Example: https://eandata.com/image/products/004/900/000/0049000006582.jpg  
+1. Tescolabs - We noticed that Tescolabs store image using last 3 digits of EAN number.  Example: https://img.tesco.com/Groceries/pi/404/404/IDShot_540x540.jpg
+  - Advantages: This may actually have faster cloud storage access than our strategy.
+  - Disadvantages: The downside is would be slower/harder to browse a local folder because of too many objects in each folder. 
+2. EANDATA - Like us, EANDATA segment its folder into 3 digits of a 13 digits EAN. It store the primary image as a full EAN number with the image extension. Example: https://eandata.com/image/products/004/900/000/0049000006582.jpg  
   - Advantages: Like us, this make it easier to browse.  It is also easier for website vendor to parse when using EAN as number.  One can easily identify the image EAN because it can exists without the folder structure. It can also have good performance for cloud storage access.
   - Disadvantages: We find that, most of the time, Company Prefix digit (CP)/first digit in EAN is 0.  Not using this digit in folder struction may increase cloud storage access/segmentation.
 
