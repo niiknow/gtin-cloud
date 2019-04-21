@@ -1,0 +1,29 @@
+import got from 'got'
+import { handlers } from '../src/websiteVendors.js'
+
+jest.setTimeout(30000)
+
+describe("scrape-google", () => {
+  test('scrape-google 00819898012008', async () => {
+    const rst = await handlers.googleRequest('00819898012008', false)
+
+    // console.log(rst)
+    expect(rst).not.toBeNull()
+    expect(rst.gtin).toBe('00819898012008')
+    expect(rst.image).not.toBeNull()
+    expect(rst.gtin_path).not.toBeNull()
+    expect(rst._ts).not.toBeNull()
+  })
+
+  test('scrape-google 00602652171840', async () => {
+    const rst = await handlers.googleRequest('00602652171840', false)
+
+    // console.log(rst)
+    expect(rst).not.toBeNull()
+    expect(rst.gtin).toBe('00602652171840')
+    expect(rst.image).not.toBeNull()
+    expect(rst.gtin_path).not.toBeNull()
+    expect(rst._ts).not.toBeNull()
+  })
+})
+

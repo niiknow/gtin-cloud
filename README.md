@@ -26,25 +26,22 @@ A Content Delivery Network (CDN) would go a long way to help increase the perfor
 > This section introduce pulling data from various vendors.  We segment the Vendor's storage path to help with data retrieval and/or purge if requested by the Vendor.
 
 **Primary**
-> APIs with basically limitless calls.  You can setup job to pre-cache your data based on your GTIN database.
+> APIs with basically limitless calls and has/return an image.  You can setup job to pre-cache your data based on your GTIN database.
 - [x] Item Master - https://api.itemmaster.com/v2.2/item/?upc=gtin&ef=jpg&eip=75&epf=1000&allImg=Y
 - [x] Kwikee - https://api.kwikee.com/public/v3/data/gtin/%s
 - [x] Tesco - https://dev.tescolabs.com/product/?gtin=%s
 - [x] DataKick - https://www.datakick.org/api/items/%s
 - [x] EAN Data - https://eandata.com/feed/?v=3&find=ean13&keycode=apikey&mode=json
 - [x] Open Food Facts - https://world.openfoodfacts.org/api/v0/product/%s.json
-- [ ] USDA - https://ndb.nal.usda.gov/ndb/search/list?qlookup=%s
+- [x] Google Shopping - https://www.google.com/search?tbm=shop&tbs=vw:l,new:1&q=%s (scrape Google Shopping Web result)
 
 **Secondary**
-> APIs with low daily/monthly limit.  These vendors can be use on-demand since it would be costly to use them for pre-cache.
+> APIs with low daily/monthly limit.  These vendors can be use on-demand since it would be costly to use them for pre-cache.  Also, some of these do not include image such as USDA and Nutrition APIs.
 - [ ] Search UPC - http://www.searchupc.com/handlers/upcsearch.ashx?request_type=3&upc=%s&access_token=%s
 - [ ] UPC ItemDB - https://api.upcitemdb.com/prod/trial/lookup?upc=%s
 - [ ] Barcodeable - https://www.barcodable.com/api/v1/%s/%s
 - [ ] Walmart - https://api.walmartlabs.com/v1/items?apiKey=%s&upc=%s
-
-**Website Scraping**
-> These are most likely limitless; though there may be complications because Website formatting, data, and attributions may change on-the-fly.  Some of these Vendors are easier to scrape because they have better `schema.org` SEO attributions.
-- [ ] ShopRite - http://www.shoprite.com/pd/-/-/-/%s/
+- [ ] USDA - https://ndb.nal.usda.gov/ndb/search/list?qlookup=%s
 
 # API
 ### POST|GET /store/{gtin}?type=image&vendor=vendor&url=https://the.urlencoded.com/image.jpg
