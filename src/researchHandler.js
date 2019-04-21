@@ -65,16 +65,17 @@ export default async (event, context, callback) => {
     } else if (vendor === 'openfoodfacts') {
       const rst = await primary.openfoodfactsRequest(gtin, !nostore, imageUrl)
       return rspHandler(rst)
-    } else if (vendor === 'googleshopping') {
-      const rst = await website.googleshoppingRequest(gtin, !nostore, imageUrl)
-      return rspHandler(rst)
     }
 
     // handle secondary vendors
     if (vendor === 'digiteyes') {
       const rst = await secondary.digiteyesRequest(gtin, !nostore, imageUrl)
       return rspHandler(rst)
+    } else if (vendor === 'googleshopping') {
+      const rst = await website.googleshoppingRequest(gtin, !nostore, imageUrl)
+      return rspHandler(rst)
     }
+
   } catch (e) {
     return rspHandler({ error: e })
   }

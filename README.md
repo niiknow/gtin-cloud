@@ -33,11 +33,11 @@ A Content Delivery Network (CDN) would go a long way to help increase the perfor
 - [x] DataKick - https://www.datakick.org/api/items/%s
 - [x] EAN Data - https://eandata.com/feed/?v=3&find=ean13&keycode=apikey&mode=json
 - [x] Open Food Facts - https://(world | us).openfoodfacts.org/api/v0/product/%s.json
-- [x] Google Shopping - https://www.google.com/search?tbm=shop&tbs=vw:l,new:1&q=%s (scrape Google Shopping Web result)
 
 **Secondary**
 > APIs with low daily/monthly limit.  These vendors can be use on-demand since it would be costly to use them for pre-cache.  Also, some of these do not include image such as USDA and Nutrition APIs.
 - [x] DigitEyes - https://www.digit-eyes.com/gtin/v2_0/?upcCode=%s&field_names=all&language=en&app_key=%s&signature=%s
+- [x] Google Shopping - https://www.google.com/search?tbm=shop&tbs=vw:l,new:1&q=%s (scrape Google Shopping Web result)
 - [ ] Search UPC - http://www.searchupc.com/handlers/upcsearch.ashx?request_type=3&upc=%s&access_token=%s
 - [ ] UPC ItemDB - https://api.upcitemdb.com/prod/trial/lookup?upc=%s
 - [ ] Barcodeable - https://www.barcodable.com/api/v1/%s/%s

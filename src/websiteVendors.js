@@ -5,7 +5,8 @@ import rua        from 'random-useragent'
 import scrapeIt   from 'scrape-it'
 import storeTasks from './storeTasks'
 
-const debug = require('debug')('gtin-cloud')
+const debug     = require('debug')('gtin-cloud')
+const scriptReg = /<(script|style)\b[^<]*(?:(?!<\/(script|style)>)<[^<]*)*<\/(script|style)>/gi
 
 const getGoogleProductId = async (gtin) => {
   try {
@@ -19,11 +20,14 @@ const getGoogleProductId = async (gtin) => {
     })
 
     const re = /<a[^>]+href="\/shopping\/product\/(.*?)"[^>]*>/g
-    const m  = re.exec(rst.body)
+    const bd = rst.body.replace(scriptReg, '')
+    const m  = re.exec(bd)
     if (m[1] && m[1].indexOf('?') > 0) {
       return m[1].split('?')[0]
     }
 
+    // console.log(bd)
+    debug(bd)
     return null
   } catch(e) {
     // console.log(e)
@@ -45,7 +49,9 @@ const scrapeGoogleShopping = async (pid) => {
       }
     })
 
-    const $ = cherio.load(rst.body)
+    // remove script and style tags to help cherio
+    const bd = rst.body.replace(scriptReg, '')
+    const $  = cherio.load(bd)
     const opts = {
       name: '#product-name',
       description: '#product-description-full',
@@ -86,6 +92,14 @@ const scrapeGoogleShopping = async (pid) => {
     const obj = scrapeIt.scrapeHTML($, opts)
     obj.url   = url
     obj.pid   = pid
+
+    // try a different query
+    if (!obj.image_url) {
+      const img = $('#pp-altimg-init-main > img')
+      // console.log(img.html())
+      obj.image_url = img.attr('src')
+    }
+
     return obj
 
   } catch(e) {
