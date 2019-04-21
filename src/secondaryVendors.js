@@ -6,10 +6,10 @@ import gtinPath   from './gtinPath'
 const debug = require('debug')('gtin-cloud')
 
 const digiteyesCreateSignature = (auth_key, ean) => {
-    const hash = crypto.createHmac('sha1', auth_key)
-    hash.update(ean)
-    const sig = hash.digest('base64')
-    return sig
+  const hash = crypto.createHmac('sha1', auth_key)
+  hash.update(ean)
+  const sig = hash.digest('base64')
+  return sig
 }
 
 class Handlers {
@@ -18,8 +18,8 @@ class Handlers {
       const ak  = process.env.DIGITEYES_APPKEY
       const ean = `0000000000000${gtin}`.slice(-13)
       const sig = digiteyesCreateSignature(process.env.DIGITEYES_AUTHKEY, ean)
-      const url = `https://www.digit-eyes.com/gtin/v2_0/?upcCode=${ean}&field_names=all&language=en&app_key=${ak}&signature=${sig}`
-      const rst = await got(url)
+      const url = `https://www.digit-eyes.com/gtin/v2_0/?upcCode=${ean}&field_names=all&language=en&app_key=${ak}`
+      const rst = await got(url + sig)
       // debug(rst.body)
 
       const obj     = JSON.parse(rst.body)
@@ -29,7 +29,7 @@ class Handlers {
       obj._ts       = (new Date()).toISOString()
 
       if (obj.return_code !== '000') {
-        return { error: 'request error', response: rst.body }
+        return { error: `${gtin} not found`, response: rst.body }
       }
 
       if (storeData) {
