@@ -4,6 +4,13 @@ import { handlers } from '../src/websiteVendors.js'
 jest.setTimeout(30000)
 
 describe("scrape-google", () => {
+  test('scrape-google invalid 00819898012009', async () => {
+    const rst = await handlers.googleRequest('00819898012009', false)
+
+    // console.log(rst)
+    expect(rst).toBe('00819898012009 not found')
+  })
+
   test('scrape-google 00819898012008', async () => {
     const rst = await handlers.googleRequest('00819898012008', false)
 

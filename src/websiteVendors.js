@@ -6,7 +6,7 @@ import scrapeIt from 'scrape-it'
 
 const debug = require('debug')('gtin-cloud')
 
-const getGoogleLink = async (gtin) => {
+const getGoogleProductId = async (gtin) => {
   try {
     const url = `https://www.google.com/search?tbm=shop&tbs=vw:l,new:1&q=${gtin}`
     const rst = await got.get(url, {
@@ -17,10 +17,10 @@ const getGoogleLink = async (gtin) => {
       }
     })
 
-    const $ = cherio.load(rst.body)
-    const link = $('a[href^="/shopping/product"]').first().attr('href')
-    if (link) {
-      return link.split('?')[0]
+    const re = /<a[^>]+href=\"\/shopping\/product\/(.*?)\"[^>]*>/g
+    const m  = re.exec(rst.body)
+    if (m[1]) {
+      return m[1].split('?')[0]
     }
 
     return null
@@ -31,11 +31,11 @@ const getGoogleLink = async (gtin) => {
   }
 }
 
-const scrapeGoogleShopping = async (path) => {
+const scrapeGoogleShopping = async (pid) => {
   try {
     // we want the biggest image possible, otherwise add '/specs' to url
     // to get product Ingredients, Warnings, Nutritions, Brand, etc..
-    const url = `https://www.google.com${path}`
+    const url = `https://www.google.com/shopping/product/${pid}`
     const rst = await got.get(url, {
       headers: {
         'User-Agent': rua.getRandom(ua => ua.browserName === 'Firefox'),
@@ -84,6 +84,7 @@ const scrapeGoogleShopping = async (path) => {
 
     const obj = scrapeIt.scrapeHTML($, opts)
     obj.url   = url
+    obj.pid   = pid
     return obj
 
   } catch(e) {
@@ -96,11 +97,11 @@ const scrapeGoogleShopping = async (path) => {
 class Handlers {
   static async googleRequest(gtin, storeData = false, imageUrl = null) {
     try {
-      const link = await getGoogleLink(gtin)
+      const pid = await getGoogleProductId(gtin)
       let obj = null
 
-      if (link && link.indexOf('/product') > 0) {
-        obj           = await scrapeGoogleShopping(link)
+      if (pid && pid.length > 0) {
+        obj           = await scrapeGoogleShopping(pid)
         obj.gtin      = gtin
         obj.gtin_path = gtinPath(gtin)
         obj._ts       = (new Date()).toISOString()
