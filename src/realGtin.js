@@ -7,6 +7,10 @@
  * @return {string}      actual gtin
  */
 export default (gtin) => {
+  if (!/^\d+$/.test(gtin)) {
+    return gtin
+  }
+
   gtin      = `00000000000000${gtin}`.slice(-14)
   const pfx = gtin.slice(0, 13)
 

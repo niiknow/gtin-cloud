@@ -5,6 +5,10 @@
  * @return {boolean}      true if national product
  */
 export default (gtin) => {
+  if (!/^\d+$/.test(gtin)) {
+    return false
+  }
+
   // digit 1 is packaging level, digit 2 determine country so we ignore
   const upc12 = `00000000000000${gtin}`.slice(-12)
   const num   = Number(upc12)

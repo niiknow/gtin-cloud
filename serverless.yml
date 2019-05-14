@@ -86,3 +86,15 @@ functions:
               parameters:
                 paths:
                   vendor: true
+
+  imageHandler:
+    handler: handler.imageHandler
+    events:
+      - http:
+            method: get
+            path: image/{gtin}/{client}
+            cors: true
+            request:
+              parameters:
+                paths:
+                  gtin: true
