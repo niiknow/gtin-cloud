@@ -47,7 +47,7 @@ export default async (event, context, callback) => {
     }
   })
 
-  rspHandler(imageUrl, imageUrl ? 302 : 404)
+  rspHandler(imageUrl, imageUrl ? 302 : 404, imageUrl ? { Location: redir } : null)
 
   return imageUrl
 }
