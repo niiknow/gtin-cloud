@@ -1,8 +1,8 @@
 import crypto     from 'crypto'
 import got        from 'got'
-import xmljs      from 'xml-js'
 import storeTasks from './storeTasks'
 import gtinPath   from './gtinPath'
+
 const debug = require('debug')('gtin-cloud')
 
 const digiteyesCreateSignature = (auth_key, ean) => {

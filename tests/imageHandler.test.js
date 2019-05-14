@@ -17,12 +17,7 @@ describe('image-handler-tests', () => {
         }
       },
       null,
-      (err, rst) => {
-        if (err) {
-          console.log(err)
-          console.log('falk')
-        }
-
+      (err) => {
         expect(err).toBeNull()
       }
     )
@@ -42,12 +37,7 @@ describe('image-handler-tests', () => {
         }
       },
       null,
-      (err, rst) => {
-        if (err) {
-          console.log(err)
-          console.log('falk')
-        }
-
+      (err) => {
         expect(err).toBeNull()
       }
     )

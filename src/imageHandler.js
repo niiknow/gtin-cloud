@@ -37,7 +37,7 @@ export default async (event, context, callback) => {
   tasks.push(got(baseUrl + gtinPath(rgtin, '') + 'index.jpg', headers))
 
   const rsts = await Promise.all(tasks.map(p => p.catch(e => e)))
-  rsts.forEach((item, i) => {
+  rsts.forEach((item) => {
     if (imageUrl) {
       return
     }
