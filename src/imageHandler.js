@@ -14,15 +14,15 @@ const baseUrl = process.env.CDN_BASE
  * @param  Function   callback the callback
  */
 export default async (event, context, callback) => {
-  const gtin       = (event.pathParameters.gtin || '').trim().replace(/[^0-9A-Z]*/g, '')
   const client     = (event.pathParameters.client || '').trim().toLowerCase()
   const rspHandler = res(context, callback)
-
-  if (gtin.length < 14) {
-    return rspHandler(`${gtin} must be at least 14 characters`, 422)
-  }
+  let gtin         = (event.pathParameters.gtin || '').trim().replace(/[^0-9a-z-]*/gi, '')
 
   debug(`started for ${gtin}`)
+
+  // no need to validdate, just make it it's 14 chars
+  gtin = `00000000000000${gtin}`.slice(-14)
+
   const tasks   = []
   const headers = { method: 'head' }
   const rgtin   = realGtin(gtin)

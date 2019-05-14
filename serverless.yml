@@ -27,6 +27,7 @@ provider:
   memorySize: 512
   apiKeys:
     - ${opt:stage, 'dev'}-key
+    - ${opt:stage, 'dev'}-hannaford
   iamRoleStatements:
     - Effect: "Allow"
       Action:
