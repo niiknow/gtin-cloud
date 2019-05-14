@@ -6,7 +6,7 @@
   "scripts": {
     "serverless": "node_modules/.bin/serverless",
     "sls": "node_modules/.bin/serverless",
-    "deploy": "sls deploy --stage prod",
+    "deploy": "npm run lint && sls deploy --stage prod",
     "service-info": "sls info --stage prod",
     "lint": "eslint --ext .js,.jsx ./",
     "lint-fix": "eslint --fix --ext .js,.jsx ./",
