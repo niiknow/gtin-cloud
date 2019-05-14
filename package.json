@@ -1,6 +1,6 @@
 {
   "name": "gtin-cloud",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "GTIN cloud storage strategy",
   "main": "handler.js",
   "scripts": {
