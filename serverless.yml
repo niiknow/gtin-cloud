@@ -27,7 +27,7 @@ provider:
   memorySize: 512
   apiKeys:
     - ${opt:stage, 'dev'}-key
-    - ${opt:stage, 'dev'}-hannaford
+    - ${opt:stage, 'dev'}-han
   iamRoleStatements:
     - Effect: "Allow"
       Action:
@@ -93,7 +93,7 @@ functions:
     events:
       - http:
             method: get
-            path: image/{gtin}/{client}
+            path: image/{gtin}
             cors: true
             request:
               parameters:

@@ -14,8 +14,9 @@ const baseUrl = process.env.CDN_BASE
  * @param  Function   callback the callback
  */
 export default async (event, context, callback) => {
-  const client     = (event.pathParameters.client || '').trim().toLowerCase()
   const rspHandler = res(context, callback)
+  const qs         = event.queryStringParameters || {}
+  const client     = (qs.client || '').trim().toLowerCase()
   let gtin         = (event.pathParameters.gtin || '').trim().replace(/[^0-9a-z-]*/gi, '')
 
   debug(`started for ${gtin}`)
@@ -47,7 +48,7 @@ export default async (event, context, callback) => {
     }
   })
 
-  rspHandler(imageUrl, imageUrl ? 302 : 404, imageUrl ? { Location: redir } : null)
+  rspHandler(imageUrl, imageUrl ? 302 : 404, imageUrl ? { Location: imageUrl } : null)
 
   return imageUrl
 }
