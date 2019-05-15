@@ -44,4 +44,25 @@ describe('image-handler-tests', () => {
 
     expect(rst).toBe(baseUrl + '008/100/003/00008100003983/index.jpg')
   })
+
+  // this is commented out because, if it has already been executed
+  // then product is no longer new
+  /* test('test request queuing of new national product', async () => {
+    const rst = await handler(
+      {
+        pathParameters: {
+          gtin: '00725439999687'
+        },
+        queryStringParameters: {
+          nocheck: 0
+        }
+      },
+      null,
+      (err) => {
+        expect(err).toBeNull()
+      }
+    )
+
+    expect(rst).toBe(null)
+  })*/
 })

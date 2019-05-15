@@ -2,12 +2,18 @@ import res        from './response'
 import realGtin   from './realGtin'
 import gtinPath   from './gtinPath'
 import got        from 'got'
+import isNational from './isNational'
+import queueS3    from './queueS3'
 
-const debug   = require('debug')('gtin-cloud')
-const baseUrl = process.env.CDN_BASE
+const debug     = require('debug')('gtin-cloud')
+const baseUrl   = process.env.CDN_BASE
+const queuePath = process.env.QUEUE_PATH
 
 /**
  * Handle returning of image url by gtin
+ *
+ * Also automatically queue national gtin to s3
+ * for auto-research
  *
  * @param  object     event    the event
  * @param  object     context  the context
@@ -28,24 +34,36 @@ export default async (event, context, callback) => {
   const headers = { method: 'head' }
   const rgtin   = realGtin(gtin)
   let imageUrl  = null
+  let count     = 0
+  let hasQueue  = false
 
   // always search local first
   if (client.length > 0) {
+    count++;
     tasks.push(got(baseUrl + gtinPath(gtin, client) + 'index.jpg', headers))
   }
 
   // if not all number
   if (!/^\d+$/.test(gtin)) {
+    count++;
     // search national with the provided gtin
     tasks.push(got(baseUrl + gtinPath(gtin) + 'index.jpg', headers))
   } else if (isNational(gtin)) {
+    count++;
     // search national with real gtin
     tasks.push(got(baseUrl + gtinPath(rgtin) + 'index.jpg', headers))
+
+    // check if we already queued the national product research
+    if (queuePath) {
+      const queueUrl = `https://s3.amazonaws.com/${queuePath}`
+      hasQueue = true
+      tasks.push(got(`${queueUrl}${rgtin}.jpg`, headers))
+    }
   }
 
   const rsts = await Promise.all(tasks.map(p => p.catch(e => e)))
-  rsts.forEach((item) => {
-    if (imageUrl) {
+  rsts.forEach((item, i) => {
+    if (imageUrl || i >= count) {
       return
     }
 
@@ -53,6 +71,19 @@ export default async (event, context, callback) => {
       imageUrl = item.url
     }
   })
+
+  // if queue url results
+  if (hasQueue && rsts[count]) {
+    // check queue url status code
+    if (rsts[count].statusCode !== 200) {
+      try {
+        await queueS3(queuePath, rgtin)
+      } catch(e) {
+        // don't care, just debug it
+        debug('queue error', e)
+      }
+    }
+  }
 
   rspHandler(imageUrl, imageUrl ? 302 : 404, imageUrl ? { Location: imageUrl } : null)
 
