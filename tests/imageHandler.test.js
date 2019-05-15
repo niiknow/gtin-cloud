@@ -1,4 +1,5 @@
 import handler from '../src/imageHandler'
+require('./loadConfig')
 
 const baseUrl = process.env.CDN_BASE
 

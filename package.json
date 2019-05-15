@@ -11,7 +11,7 @@
     "lint": "eslint --ext .js,.jsx ./",
     "lint-fix": "eslint --fix --ext .js,.jsx ./",
     "local": "cross-env DEBUG=gtin-cloud SLS_DEBUG=* node_modules/.bin/serverless offline --stage dev",
-    "test": "jest"
+    "test": "cross-env DEBUG=gtin-cloud jest -t"
   },
   "author": "Tom Noogen",
   "license": "MIT",
@@ -45,6 +45,7 @@
     "eslint-plugin-import": "^2.17.2",
     "eslint-plugin-jest": "^21.27.2",
     "jest": "^24.8.0",
+    "js-yaml": "^3.13.1",
     "serverless": "^1.42.3",
     "serverless-offline": "^3.33.0",
     "serverless-plugin-existing-s3": "^2.3.3",

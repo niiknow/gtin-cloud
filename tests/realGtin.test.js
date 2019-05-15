@@ -1,4 +1,5 @@
 import realGtin from '../src/realGtin'
+require('./loadConfig')
 
 jest.setTimeout(30000)
 

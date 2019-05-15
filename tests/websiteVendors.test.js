@@ -1,4 +1,5 @@
 import handlers from '../src/websiteVendors.js'
+require('./loadConfig')
 
 jest.setTimeout(30000)
 
