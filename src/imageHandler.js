@@ -34,8 +34,14 @@ export default async (event, context, callback) => {
     tasks.push(got(baseUrl + gtinPath(gtin, client) + 'index.jpg', headers))
   }
 
-  // search national
-  tasks.push(got(baseUrl + gtinPath(rgtin, '') + 'index.jpg', headers))
+  // if not all number
+  if (!/^\d+$/.test(gtin)) {
+    // search national with the provided gtin
+    tasks.push(got(baseUrl + gtinPath(gtin) + 'index.jpg', headers))
+  } else if (isNational(gtin)) {
+    // search national with real gtin
+    tasks.push(got(baseUrl + gtinPath(rgtin) + 'index.jpg', headers))
+  }
 
   const rsts = await Promise.all(tasks.map(p => p.catch(e => e)))
   rsts.forEach((item) => {
