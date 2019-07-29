@@ -5,9 +5,10 @@ import got        from 'got'
 import isNational from './isNational'
 import queueS3    from './queueS3'
 
-const debug     = require('debug')('gtin-cloud')
-const baseUrl   = process.env.CDN_BASE
-const queuePath = process.env.QUEUE_PATH
+const debug       = require('debug')('gtin-cloud')
+const baseUrl     = process.env.CDN_BASE
+const queuePath   = process.env.QUEUE_PATH
+const fallbackUrl = process.env.IM_FALLBACK_URL
 
 /**
  * Handle returning of image url by gtin
@@ -49,8 +50,14 @@ export default async (event, context, callback) => {
     // search national with the provided gtin
     tasks.push(got(baseUrl + gtinPath(gtin) + 'index.jpg', headers))
   } else if (isNational(gtin)) {
-    count++;
+    // research local with real gtin if they do not match
+    if (gtin != rgtin) {
+      count++;
+      tasks.push(got(baseUrl + gtinPath(rgtin, client) + 'index.jpg', headers))
+    }
+
     // search national with real gtin
+    count++;
     tasks.push(got(baseUrl + gtinPath(rgtin) + 'index.jpg', headers))
 
     // check if we already queued the national product research
@@ -83,6 +90,11 @@ export default async (event, context, callback) => {
         debug('queue error', e)
       }
     }
+  }
+
+  // use fallbackUrl if no imageUrl
+  if (!imageUrl && fallbackUrl) {
+    imageUrl = fallbackUrl.replace('{gtin}', rgtin)
   }
 
   rspHandler(imageUrl, imageUrl ? 302 : 404, imageUrl ? { Location: imageUrl } : null)
