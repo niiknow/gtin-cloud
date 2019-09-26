@@ -1,7 +1,9 @@
-import image from './src/imageHandler'
-import store from './src/storeHandler'
-import research from './src/researchHandler'
+import imageH from './src/imageHandler'
+import storeH from './src/storeHandler'
+import researchH from './src/researchHandler'
+import deleteH from './src/deleteHandler'
 
-export const imageHandler = image
-export const storeHandler = store
-export const researchHandler = research
+export const imageHandler = imageH
+export const storeHandler = storeH
+export const researchHandler = researchH
+export const deleteHandler = deleteH
