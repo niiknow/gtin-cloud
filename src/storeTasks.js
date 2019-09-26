@@ -36,7 +36,7 @@ export default (gtin, url, type, body, vendor = '', name = null, urlExtra = null
       tasks.push(saveToS3(destPath, fstream, 'image/jpeg'));
     } else if (type.indexOf('media') > -1) {
       // handle media
-      destPath = basePath + 'media/' + fileName
+      destPath = `${basePath}media/${fileName}`
       const fstream  = got.stream(url, urlExtra)
       tasks.push(saveToS3(destPath, fstream));
     } else if (type.length > 0) {

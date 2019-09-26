@@ -99,3 +99,15 @@ functions:
               parameters:
                 paths:
                   gtin: true
+
+  deleteHandler:
+    handler: handler.deleteHandler
+    events:
+      - http:
+            method: delete
+            path: delete/{gtin}
+            cors: true
+            request:
+              parameters:
+                paths:
+                  gtin: true
