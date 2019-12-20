@@ -1,7 +1,7 @@
 # GTIN Cloud
 > Without using a database, how would one store and access Item informations by its [GTIN](https://en.wikipedia.org/wiki/Global_Trade_Item_Number)?
 
-We need to create a folder storage convention, that are easy to access without sacrificing performance.
+We need a folder storage convention that is easy to access without sacrificing performance.
 
 # Storage Stragegy
 Let say you have a ficticious GTIN number 00123456789012.  Then the folder path for this would be: 123/456/789/00123456789012/
