@@ -1,5 +1,5 @@
+require('./_loadConfig')
 import handler from '../src/imageHandler'
-require('./loadConfig')
 
 const baseUrl = process.env.CDN_BASE
 
@@ -11,7 +11,7 @@ describe('image-handler-tests', () => {
       {
         pathParameters: {
           client: 'itemmaster',
-          gtin: '00008100003983'
+          gtin: '00018200281372'
         },
         queryStringParameters: {
           nocheck: 0
@@ -23,7 +23,7 @@ describe('image-handler-tests', () => {
       }
     )
 
-    expect(rst).toBe(baseUrl + 'itemmaster/008/100/003/00008100003983/index.jpg')
+    expect(rst).toBe(baseUrl + '018/200/281/00018200281372/index.jpg')
   })
 
   test('test request invalid gtin with kwikee', async () => {
@@ -31,7 +31,7 @@ describe('image-handler-tests', () => {
       {
         pathParameters: {
           client: 'kwikee',
-          gtin: '00008100003983'
+          gtin: '00018200281372'
         },
         queryStringParameters: {
           nocheck: 0
@@ -43,7 +43,7 @@ describe('image-handler-tests', () => {
       }
     )
 
-    expect(rst).toBe(baseUrl + '008/100/003/00008100003983/index.jpg')
+    expect(rst).toBe(baseUrl + '018/200/281/00018200281372/index.jpg')
   })
 
   // this is commented out because, if it has already been executed

@@ -6,9 +6,6 @@ import isNational from './isNational'
 import queueS3    from './queueS3'
 
 const debug       = require('debug')('gtin-cloud')
-const baseUrl     = process.env.CDN_BASE
-const queuePath   = process.env.QUEUE_PATH
-const fallbackUrl = process.env.IM_FALLBACK_URL
 
 /**
  * Handle returning of image url by gtin
@@ -21,10 +18,13 @@ const fallbackUrl = process.env.IM_FALLBACK_URL
  * @param  Function   callback the callback
  */
 export default async (event, context, callback) => {
-  const rspHandler = res(context, callback)
-  const qs         = event.queryStringParameters || {}
-  const client     = (qs.client || '').trim().toLowerCase()
-  let gtin         = (event.pathParameters.gtin || '').trim().replace(/[^0-9a-z-]*/gi, '')
+  const baseUrl     = process.env.CDN_BASE
+  const queuePath   = process.env.QUEUE_PATH
+  const fallbackUrl = process.env.IM_FALLBACK_URL
+  const rspHandler  = res(context, callback)
+  const qs          = event.queryStringParameters || {}
+  const client      = (qs.client || '').trim().toLowerCase()
+  let gtin          = (event.pathParameters.gtin || '').trim().replace(/[^0-9a-z-]*/gi, '')
 
   debug(`started for ${gtin}`)
 
@@ -46,28 +46,33 @@ export default async (event, context, callback) => {
 
   // if not all number
   if (!/^\d+$/.test(gtin)) {
+    debug('gtin is non-numeric, search national only')
     count++;
     // search national with the provided gtin
     tasks.push(got(baseUrl + gtinPath(gtin) + 'index.jpg', headers))
   } else if (isNational(gtin)) {
     // research local with real gtin if they do not match
     if (gtin != rgtin) {
+      debug('invalid gtin, search local first', rgtin)
       count++;
       tasks.push(got(baseUrl + gtinPath(rgtin, client) + 'index.jpg', headers))
     }
 
+    debug('gtin is numeric, search national')
     // search national with real gtin
     count++;
     tasks.push(got(baseUrl + gtinPath(rgtin) + 'index.jpg', headers))
 
     // check if we already queued the national product research
     if (queuePath) {
+      debug('check gtin research queue')
       const queueUrl = `https://s3.amazonaws.com/${queuePath}`
       hasQueue = true
       tasks.push(got(`${queueUrl}${rgtin}.jpg`, headers))
     }
   }
 
+  debug('search count', count)
   const rsts = await Promise.all(tasks.map(p => p.catch(e => e)))
   rsts.forEach((item, i) => {
     if (imageUrl || i >= count) {

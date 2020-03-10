@@ -1,14 +1,14 @@
 require('./_loadConfig')
-import handlers from '../src/secondaryVendors'
+import handlers from '../src/primaryVendors'
 
 jest.setTimeout(30000)
 
-describe('digiteyes-research-tests', () => {
-  test('digiteyes lookup 00078732004245', async () => {
-    const rst = await handlers.digiteyesRequest('00078732004245', false)
+describe('itemmaster-research-tests', () => {
+  test('itemmaster lookup 00688267075230', async () => {
+    const rst = await handlers.itemMasterRequest('00688267075230', false)
     // console.log(rst)
     expect(rst).not.toBeNull()
-    expect(rst.gtin).toBe('00078732004245')
+    expect(rst.gtin).toBe('00688267075230')
     expect(rst.image).not.toBeNull()
     expect(rst.image.length > 0).toBe(true)
     expect(rst.gtin_path).not.toBeNull()

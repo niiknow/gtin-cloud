@@ -19,11 +19,11 @@ const getGoogleProductId = async (gtin) => {
       }
     })
 
-    const re = /<a[^>]+href="\/shopping\/product\/(.*?)"[^>]*>/g
+    const re = /<a[^>]+href="\/shopping\/product\/([^"]+)+"[^>]*>/g
     const bd = rst.body.replace(scriptReg, '')
     const m  = re.exec(bd)
     if (m[1] && m[1].indexOf('?') > 0) {
-      return m[1].split('?')[0]
+      return m[1]
     }
 
     // console.log(bd)
@@ -36,11 +36,11 @@ const getGoogleProductId = async (gtin) => {
   }
 }
 
-const scrapeGoogleShopping = async (pid) => {
+const scrapeGoogleShopping = async (shopUrl) => {
   try {
     // we want the biggest image possible, otherwise add '/specs' to url
     // to get product Nutritions, Brand, etc..
-    const url = `https://www.google.com/shopping/product/${pid}`
+    const url = `https://www.google.com/shopping/product/${shopUrl}`
     const rst = await got.get(url, {
       headers: {
         'User-Agent': rua.getRandom(ua => ua.browserName === 'Firefox'),
@@ -50,48 +50,21 @@ const scrapeGoogleShopping = async (pid) => {
     })
 
     // remove script and style tags to help cherio
-    const bd = rst.body.replace(scriptReg, '')
-    const $  = cherio.load(bd)
+    const bd   = rst.body.replace(scriptReg, '')
+    const $    = cherio.load(bd)
     const opts = {
-      name: '#product-name',
-      description: '#product-description-full',
+      name: 'title',
+      description: {
+        selector: 'meta[name="description"]', attr: 'content'
+      },
       image_url: {
-        selector: '#pp-altimg-init-main img', attr: 'src'
-      },
-      prices: {
-        listItem: '#summary-prices span'
-      },
-      rank1: {
-        selector: '#product-rating-reviews > span',
-        eq: 0
-      },
-      rank2: {
-        selector: '#product-rating-reviews > span',
-        eq: 1
-      },
-      rating: {
-        selector: '#product-rating > span > div',
-        attr: 'aria-label'
-      },
-      specs: {
-        listItem: '#specs .section-inner span'
-      },
-      attributes: {
-        listItem: '.attr-attributes > .shop__secondary > span'
-      },
-      images: {
-        listItem: 'a.sh-mo__image',
-        data: {
-          url: { attr: 'data-image' },
-          type: { attr: 'data-type' },
-          index: { attr: 'data-index' }
-        }
+        selector: '.main-image img', attr: 'src'
       }
     }
 
     const obj = scrapeIt.scrapeHTML($, opts)
-    obj.url   = url
-    obj.pid   = pid
+    obj.url  = url
+    obj.name = obj.name.replace('| Google Shopping', '').trim()
 
     // try a different query
     if (!obj.image_url) {
@@ -238,11 +211,11 @@ class Handlers {
   static async googleshoppingRequest(gtin, storeData = false, imageUrl = null) {
     try {
       // convert gtin to asin
-      const pid = await getGoogleProductId(gtin)
+      const shopUrl = await getGoogleProductId(gtin)
       let obj   = null
 
-      if (pid && pid.length > 0) {
-        obj           = await scrapeGoogleShopping(pid)
+      if (shopUrl && shopUrl.length > 0) {
+        obj           = await scrapeGoogleShopping(shopUrl)
         obj.gtin      = gtin
         obj.gtin_path = gtinPath(gtin)
         obj._ts       = (new Date()).toISOString()
@@ -256,7 +229,7 @@ class Handlers {
           }
         }
       } else {
-        return `${gtin} not found`
+        return `${gtin} not found with url https://www.google.com/shopping/product/${shopUrl}`
       }
 
       debug(`completed ${gtin}`)

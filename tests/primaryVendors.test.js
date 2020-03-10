@@ -1,5 +1,5 @@
+require('./_loadConfig')
 import handlers from '../src/primaryVendors'
-require('./loadConfig')
 
 jest.setTimeout(30000)
 
@@ -34,11 +34,11 @@ describe('eandata-research-tests', () => {
 })
 
 describe('itemmaster-research-tests', () => {
-  test('itemmaster lookup 00832544000501', async () => {
-    const rst = await handlers.itemMasterRequest('00832544000501', false)
+  test('itemmaster lookup 00721733000159', async () => {
+    const rst = await handlers.itemMasterRequest('00721733000159', true)
     // console.log(rst)
     expect(rst).not.toBeNull()
-    expect(rst.gtin).toBe('00832544000501')
+    expect(rst.gtin).toBe('00721733000159')
     expect(rst.image).not.toBeNull()
     expect(rst.image.length > 0).toBe(true)
     expect(rst.gtin_path).not.toBeNull()
@@ -50,7 +50,7 @@ describe('itemmaster-research-tests', () => {
 describe('kwikee-research-tests', () => {
 
   test('kwikee lookup 00018200281372', async () => {
-    const rst = await handlers.kwikeeRequest('00018200281372', false)
+    const rst = await handlers.kwikeeRequest('00018200281372', true)
     // console.log(rst)
     expect(rst).not.toBeNull()
     expect(rst.gtin).toBe('00018200281372')
