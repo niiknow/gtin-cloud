@@ -60,6 +60,7 @@ functions:
     events:
       - http:
             method: post
+            private: true
             path: store/{gtin}
             cors: true
             request:
@@ -68,6 +69,7 @@ functions:
                   gtin: true
       - http:
             method: get
+            private: true
             path: store/{gtin}
             cors: true
             request:
@@ -80,6 +82,7 @@ functions:
     events:
       - http:
             method: get
+            private: true
             path: research/{vendor}
             cors: true
             request:
@@ -92,6 +95,7 @@ functions:
     events:
       - http:
             method: get
+            private: true
             path: image/{gtin}
             cors: true
             request:
@@ -104,6 +108,7 @@ functions:
     events:
       - http:
             method: delete
+            private: true
             path: delete/{gtin}
             cors: true
             request:
