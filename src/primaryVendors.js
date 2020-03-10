@@ -91,7 +91,7 @@ class Handlers {
     }
   }
 
-  static async itemMasterRequest(gtin, storeData = false, imageUrl = null) {
+  static async itemMasterRequest(gtin, storeData = false, imageUrl = null, manufacturer = null) {
     gtin = `0000000000000${gtin}`.slice(-14)
 
     const url = 'https://api.itemmaster.com/v2.2/item/'
@@ -109,7 +109,12 @@ class Handlers {
       allImg: 'Y'
     }
 
+    if (manufacturer) {
+      query.m = manufacturer
+    }
+
     try {
+      debug(`begin ${gtin}`, query)
       const rst  = await got(url, { query, headers })
       const json = xmljs.xml2json(rst.body, {
         compact: true,
@@ -152,11 +157,12 @@ class Handlers {
           }
         }
       } else {
+        debug(json)
         return `${gtin} not found`
       }
 
       debug(`completed ${gtin}`)
-      return product
+      return product ? product : `${gtin} empty result`
     } catch(e) {
       debug(JSON.stringify(e, null, 2))
       return { error: 'request error' }
