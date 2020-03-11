@@ -2,6 +2,8 @@ import saveToS3 from './saveToS3'
 import gtinPath from './gtinPath'
 import got      from 'got'
 
+const debug = require('debug')('gtin-cloud')
+
 /**
  * Parse gtin into a folder path
  *
@@ -23,12 +25,13 @@ export default (gtin, url, type, body, vendor = '', name = null, urlExtra = null
   // handle image
   if (rawUrl.indexOf('http') === 0) {
     const fileName = (name || rawUrl.split('/').pop()).toLowerCase();
-    const ext      = fileName.split('.').pop()
+    // const ext      = fileName.split('.').pop()
 
     if (type.indexOf('image') > -1) {
-      if (ext !== 'jpg' && ext !== 'jpeg') {
-        return { error: `${fileName} extension must be jpg/jpeg`, destPath: destPath }
-      }
+      // itemmaster start responding without extension
+      /*if (ext !== 'jpg' && ext !== 'jpeg') {
+        return { tasks: [], error: `${fileName} extension must be jpg/jpeg`, destPath: destPath }
+      }*/
 
       // download and store image as index.jpg
       destPath = basePath + 'index.jpg'
@@ -40,7 +43,8 @@ export default (gtin, url, type, body, vendor = '', name = null, urlExtra = null
       const fstream  = got.stream(url, urlExtra)
       tasks.push(saveToS3(destPath, fstream));
     } else if (type.length > 0) {
-      return { error: `Unknown type ${type}`, destPath: destPath }
+      debug(`storeTasks: unknown type ${type}`)
+      return { tasks: [], error: `Unknown type ${type}`, destPath: destPath }
     }
   }
 
