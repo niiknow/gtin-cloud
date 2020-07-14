@@ -110,6 +110,7 @@ class Handlers {
       ef: 'jpg',
       eip: 72,
       epf: 1000,
+      pi: 'c',
       allImg: 'Y'
     }
 
@@ -146,6 +147,10 @@ class Handlers {
           } else if (medias.url) {
             image = medias.url._text
           }
+        }
+
+        if (image) {
+          image = image.replace('trim=True', '').replace('transparent=True', '')
         }
 
         product.gtin      = gtin
