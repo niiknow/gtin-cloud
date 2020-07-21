@@ -45,7 +45,7 @@
     "eslint-config-prettier": "^3.6.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jest": "^21.27.2",
-    "jest": "^24.9.0",
+    "jest": "^26.1.0",
     "js-yaml": "^3.14.0",
     "serverless": "^1.75.1",
     "serverless-offline": "^3.33.0",
