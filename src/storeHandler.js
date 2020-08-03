@@ -30,7 +30,7 @@ export default async (event, context, callback) => {
   debug(`begin ${gtin} ${type}: ${url}`)
 
   gtin = `00000000000000${gtin}`.slice(-14)
-  const rsp = storeTasks(gtin, url, type, event.body, qs.vendor, qs.name)
+  const rsp = storeTasks(gtin, url, type, JSON.parse(event.body), qs.vendor, qs.name)
 
   if (rsp.error) {
     return rspHandler(rsp.error, 422)

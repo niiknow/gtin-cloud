@@ -34,7 +34,7 @@ class Handlers {
 
       if (storeData) {
         // stash the data and image
-        const rsp = storeTasks(gtin, obj.image, 'image', JSON.stringify(obj), 'digiteyes')
+        const rsp = storeTasks(gtin, obj.image, 'image', obj, 'digiteyes')
         if (rsp.tasks) {
           await Promise.all(rsp.tasks)
         }

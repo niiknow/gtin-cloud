@@ -15,7 +15,6 @@ const debug = require('debug')('gtin-cloud')
  */
 export default (gtin, url, type, body, vendor = '', name = null, urlExtra = null) => {
   vendor = (vendor || '').toLowerCase()
-  body   = (body || '').trim()
 
   const rawUrl   = (url || '').trim().split(/#|\?/)[0];
   const basePath = gtinPath(gtin, vendor);
@@ -49,8 +48,10 @@ export default (gtin, url, type, body, vendor = '', name = null, urlExtra = null
   }
 
   // only store if body is a json
-  if (body.indexOf('{') > -1) {
-    tasks.push(saveToS3(basePath + 'index.json', body, 'application/json'));
+  if (body && typeof body !== 'string') {
+    // save vendor
+    body.vendor = vendor
+    tasks.push(saveToS3(basePath + 'index.json', JSON.stringify(body), 'application/json'));
   }
 
   // process all async tasks

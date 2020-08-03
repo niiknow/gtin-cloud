@@ -30,7 +30,7 @@ class Handlers {
       // debug(itemJson)
       if (storeData) {
         // stash the data and image
-        const rsp = storeTasks(gtin, image, 'image', JSON.stringify(obj), 'datakick')
+        const rsp = storeTasks(gtin, image, 'image', obj, 'datakick')
         debug('prep to store data', rsp.tasks.length)
         if (rsp.tasks.length > 0) {
           debug('storing data')
@@ -77,7 +77,7 @@ class Handlers {
         // debug(itemJson)
         if (storeData) {
           // stash the data and image
-          const rsp = storeTasks(gtin, product.image, 'image', JSON.stringify(product), 'eandata')
+          const rsp = storeTasks(gtin, product.image, 'image', product, 'eandata')
           debug('prep to store data', rsp.tasks.length)
           if (rsp.tasks.length > 0) {
             debug('storing data')
@@ -161,7 +161,7 @@ class Handlers {
 
         if (storeData) {
           // stash the data and image
-          const rsp = storeTasks(gtin, image, 'image', JSON.stringify(product), 'itemmaster', null, { headers })
+          const rsp = storeTasks(gtin, image, 'image', product, 'itemmaster', null, { headers })
           debug('prep to store data', rsp.tasks.length)
           if (rsp.tasks.length > 0) {
             debug('storing data')
@@ -215,7 +215,7 @@ class Handlers {
 
       if (storeData) {
         // console.log(image)
-        const rsp = storeTasks(gtin, image, 'image', JSON.stringify(obj), 'kwikee', `${gtin}.jpg`, { headers })
+        const rsp = storeTasks(gtin, image, 'image', obj, 'kwikee', `${gtin}.jpg`, { headers })
         debug('prep to store data', rsp.tasks.length)
         if (rsp.tasks.length > 0) {
           debug('storing data')
@@ -262,7 +262,7 @@ class Handlers {
 
         if (storeData) {
           // console.log(image)
-          const rsp = storeTasks(gtin, obj.image, 'image', JSON.stringify(obj), 'tesco', `${gtin}.jpg`)
+          const rsp = storeTasks(gtin, obj.image, 'image', obj, 'tesco', `${gtin}.jpg`)
           debug('prep to store data', rsp.tasks.length)
           if (rsp.tasks.length > 0) {
             debug('storing data')
@@ -302,7 +302,7 @@ class Handlers {
       // debug(itemJson)
       if (storeData) {
         // stash the data and image
-        const rsp = storeTasks(gtin, obj.image, 'image', JSON.stringify(obj), 'openfoodfacts')
+        const rsp = storeTasks(gtin, obj.image, 'image', obj, 'openfoodfacts')
         debug('prep to store data', rsp.tasks.length)
         if (!rsp.error && rsp.tasks.length > 0) {
           debug('storing data')

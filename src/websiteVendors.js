@@ -191,7 +191,7 @@ class Handlers {
 
         if (storeData) {
           // stash the data and image
-          const rsp = storeTasks(gtin, obj.image, 'image', JSON.stringify(obj), 'amazonweb')
+          const rsp = storeTasks(gtin, obj.image, 'image', obj, 'amazonweb')
           if (rsp.tasks) {
             await Promise.all(rsp.tasks)
           }
@@ -223,7 +223,7 @@ class Handlers {
 
         if (storeData) {
           // stash the data and image
-          const rsp = storeTasks(gtin, obj.image, 'image', JSON.stringify(obj), 'googleshopping')
+          const rsp = storeTasks(gtin, obj.image, 'image', obj, 'googleshopping')
           if (rsp.tasks) {
             await Promise.all(rsp.tasks)
           }
