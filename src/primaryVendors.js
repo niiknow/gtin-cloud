@@ -6,46 +6,6 @@ import gtinPath   from './gtinPath'
 const debug = require('debug')('gtin-cloud')
 
 class Handlers {
-  static async datakickRequest(gtin, storeData = false, imageUrl = null) {
-    try {
-      const rst = await got(`https://www.datakick.org/api/items/${gtin}`)
-      // debug(rst.body)
-
-      const obj     = JSON.parse(rst.body)
-      obj.gtin      = gtin
-      obj.gtin_path = gtinPath(gtin)
-      obj._ts       = (new Date()).toISOString()
-      let image     = imageUrl
-
-      if (!obj.gtin14) {
-        return { error: 'request error', response: rst.body }
-      }
-
-      if (image === null && obj.images[0]) {
-        image     = obj.images[0].url
-        obj.image = image
-      }
-
-      // console.log(obj)
-      // debug(itemJson)
-      if (storeData) {
-        // stash the data and image
-        const rsp = storeTasks(gtin, image, 'image', obj, 'datakick')
-        debug('prep to store data', rsp.tasks.length)
-        if (rsp.tasks.length > 0) {
-          debug('storing data')
-          await Promise.all(rsp.tasks)
-        }
-      }
-
-      debug(`completed ${gtin}`)
-      return obj
-    } catch(e) {
-      debug(JSON.stringify(e, null, 2))
-      return { error: 'request error' }
-    }
-  }
-
   static async eanDataRequest(gtin, storeData = false, imageUrl = null) {
     const query = {
       v: 3,

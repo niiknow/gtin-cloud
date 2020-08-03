@@ -3,21 +3,6 @@ import handlers from '../src/primaryVendors'
 
 jest.setTimeout(30000)
 
-describe('datakick-research-tests', () => {
-
-  test('datakick lookup 00811102020236', async () => {
-    const rst = await handlers.datakickRequest('00811102020236', false)
-    // console.log(rst)
-    expect(rst).not.toBeNull()
-    expect(rst.gtin).toBe('00811102020236')
-    expect(rst.image).not.toBeNull()
-    expect(rst.image.length > 0).toBe(true)
-    expect(rst.gtin_path).not.toBeNull()
-    expect(rst._ts).not.toBeNull()
-  })
-
-})
-
 describe('eandata-research-tests', () => {
 
   test('eandata lookup 03045320094084', async () => {
