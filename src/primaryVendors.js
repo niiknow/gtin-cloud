@@ -108,7 +108,8 @@ class Handlers {
     const query = {
       upc: gtin,
       ef: 'jpg',
-      eip: 72,
+      idx: 0,
+      limit: 1,
       epf: 1000,
       pi: 'c',
       allImg: 'Y'
