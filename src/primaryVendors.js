@@ -58,7 +58,7 @@ class Handlers {
   static async itemMasterRequest(gtin, storeData = false, imageUrl = null, manufacturer = null) {
     gtin = `0000000000000${gtin}`.slice(-14)
 
-    const url = 'https://api.itemmaster.com/v2.2/item/'
+    const url = 'https://api.syndigo.com/im/v2.2/item/'
 
     const headers = {
       username: process.env.IM_USER,
