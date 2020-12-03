@@ -56,8 +56,6 @@ class Handlers {
   }
 
   static async itemMasterRequest(gtin, storeData = false, imageUrl = null, manufacturer = null) {
-    gtin = `0000000000000${gtin}`.slice(-14)
-
     const url = 'https://api.syndigo.com/im/v2.2/item/'
 
     const headers = {
@@ -74,6 +72,8 @@ class Handlers {
       pi: 'c',
       allImg: 'Y'
     }
+
+    let myGtin = `0000000000000${gtin}`.slice(-14)
 
     if (manufacturer) {
       query.m = manufacturer
@@ -114,14 +114,15 @@ class Handlers {
           image = image.replace('trim=True', '').replace('transparent=True', '')
         }
 
-        product.gtin      = gtin
+
+        product.gtin      = myGtin
         product.image     = image
-        product.gtin_path = gtinPath(gtin)
+        product.gtin_path = gtinPath(myGtin)
         product._ts       = (new Date()).toISOString()
 
         if (storeData) {
           // stash the data and image
-          const rsp = storeTasks(gtin, image, 'image', product, 'itemmaster', null, { headers })
+          const rsp = storeTasks(myGtin, image, 'image', product, 'itemmaster', null, { headers })
           debug('prep to store data', rsp.tasks.length)
           if (rsp.tasks.length > 0) {
             debug('storing data')

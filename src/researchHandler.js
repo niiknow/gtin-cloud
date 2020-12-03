@@ -24,18 +24,20 @@ export default async (event, context, callback) => {
   // force - to force fresh data, do not use cache
   // nostore - true to not save fresh data to cache
 
-  if (gtin.length < 14) {
-    return rspHandler(`${gtin} must be at least 14 characters`, 422)
+  // make it 12 digits to allow for UPC
+  if (gtin.length < 12) {
+    return rspHandler(`${gtin} must be at least 12 characters`, 422)
   }
 
   debug(`started for ${gtin}`)
-  let data = null
+  let data   = null
+  let myGtin = `00000000000000${gtin}`.slice(-14)
 
   // if force, then we do not want to use cache
   // else, we always try to cache first
   if (!force) {
     try {
-      data = await getS3(gtin, vendor)
+      data = await getS3(myGtin, vendor)
       if (data) {
         return rspHandler(data)
       }
