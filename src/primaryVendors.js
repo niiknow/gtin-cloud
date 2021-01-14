@@ -7,7 +7,7 @@ const debug = require('debug')('gtin-cloud')
 
 class Handlers {
   static async eanDataRequest(gtin, storeData = false, imageUrl = null) {
-    const query = {
+    const searchParams = {
       v: 3,
       find: `0000000000000${gtin}`.slice(-13),
       keycode: process.env.EANDATA_KEY,
@@ -15,7 +15,7 @@ class Handlers {
     }
 
     try {
-      const rst = await got('https://eandata.com/feed/', { query })
+      const rst = await got('https://eandata.com/feed/', { searchParams })
       // debug(rst.body)
 
       const obj   = JSON.parse(rst.body)
@@ -63,7 +63,7 @@ class Handlers {
       password: process.env.IM_PASS
     }
 
-    const query = {
+    const searchParams = {
       upc: gtin,
       ef: 'jpg',
       idx: 0,
@@ -76,12 +76,12 @@ class Handlers {
     let myGtin = `0000000000000${gtin}`.slice(-14)
 
     if (manufacturer) {
-      query.m = manufacturer
+      searchParams.m = manufacturer
     }
 
     try {
-      debug(`begin ${gtin} store ${storeData}`, query, imageUrl)
-      const rst  = await got(url, { query, headers })
+      debug(`begin ${gtin} store ${storeData}`, searchParams, imageUrl)
+      const rst  = await got(url, { searchParams, headers })
       const json = xmljs.xml2json(rst.body, {
         compact: true,
         ignoreDeclaration: true
