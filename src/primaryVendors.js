@@ -100,8 +100,15 @@ class Handlers {
 
           if (Array.isArray(medias)) {
             medias.forEach((media) => {
+              if (image) {
+                return;
+              }
+
               // console.log(media)
               if (media._attributes.view === 'E_A1A3_1000x1000') {
+                image = media.url._text
+              } else if (media._attributes.view === 'A1C1') {
+                // A1C1 is Planogram Front (Front Center Elevated?)
                 image = media.url._text
               }
             })
