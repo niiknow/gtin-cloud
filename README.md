@@ -28,6 +28,7 @@ A Content Delivery Network (CDN) would go a long way to help increase the perfor
 **Primary**
 > APIs with basically limitless calls and return an image.  You can setup job to pre-cache your data based on some GTIN database.
 - [x] Item Master - https://api.syndigo.com/im/v2.2/item/?upc=gtin&ef=jpg&eip=75&epf=1000&allImg=Y
+- [x] Syndigo - https://api.syndigo.com/ui/product/?skip=0&take=1
 - [x] Kwikee - https://api.kwikee.com/public/v3/data/gtin/%s
 - [x] Tesco - https://dev.tescolabs.com/product/?gtin=%s
 - [x] EAN Data - https://eandata.com/feed/?v=3&find=ean13&keycode=apikey&mode=json

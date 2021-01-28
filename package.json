@@ -1,6 +1,6 @@
 {
   "name": "gtin-cloud",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "GTIN cloud storage strategy",
   "main": "handler.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "lint": "eslint --ext .js,.jsx ./",
     "lint-fix": "eslint --fix --ext .js,.jsx ./",
     "local": "cross-env DEBUG=gtin-cloud SLS_DEBUG=* node_modules/.bin/serverless offline --stage dev",
-    "test": "cross-env DEBUG=gtin-cloud jest -t",
+    "test": "cross-env DEBUG=gtin-cloud jest -t --testPathIgnorePatterns debug.test.js",
     "test-debug": "cross-env DEBUG=gtin-cloud jest -i tests/debug.test.js"
   },
   "author": "Tom Noogen",

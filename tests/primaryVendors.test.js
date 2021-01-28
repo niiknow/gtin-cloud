@@ -32,6 +32,20 @@ describe('itemmaster-research-tests', () => {
 
 })
 
+describe('syndigo-research-tests', () => {
+  test('syndigo lookup 028400517737', async () => {
+    const rst = await handlers.syndigoRequest('028400517737', true)
+    // console.log(rst)
+    expect(rst).not.toBeNull()
+    expect(rst.gtin).toBe('00028400517737')
+    expect(rst.image).not.toBeNull()
+    expect(rst.image.length > 0).toBe(true)
+    expect(rst.gtin_path).not.toBeNull()
+    expect(rst._ts).not.toBeNull()
+  })
+
+})
+
 describe('kwikee-research-tests', () => {
 
   test('kwikee lookup 00018200281372', async () => {

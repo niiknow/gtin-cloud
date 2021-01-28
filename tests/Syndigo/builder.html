@@ -1,0 +1,149 @@
+<html>
+<head>
+  <title>Syndigo API Test</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name=”robots” content=”noindex,nofollow”>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+
+      <div class="col-xl-8 offset-xl-2 py-5">
+        <h1>Contact Us</h1>
+
+        <p class="lead">Please fill out the fields below.</p>
+        <form id="demo-form" method="post" action="#"role="form" enctype="multipart/form-data">
+          <div class="messages"></div>
+          <div class="controls">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="uname">USERNAME</label>
+                  <input id="uname" type="text" name="uname" class="form-control" placeholder="Enter USERNAME *" required="required" data-error="USERNAME is required.">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="secret">SECRET</label>
+                  <input id="secret" type="text" name="secret" class="form-control" placeholder="Enter SECRET *" required="required" data-error="SECRET is required.">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="dataownerid">DATAOWNERID</label>
+                  <input id="dataownerid" type="text" name="dataownerid" class="form-control" placeholder="Enter DATAOWNERID *" required="required" data-error="USERNAME is required.">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="apiurl">API URL</label>
+                  <input id="apiurl" type="text" name="apiurl" class="form-control" placeholder="Enter API URL *" required="required" data-error="API URL is required." value="https://api.syndigo.com">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="path">PATH *</label>
+                  <input type="text" id="path" name="path" class="form-control" value="/api/marketplace/search?skip=0&take=25&companyId=DATAOWNERID">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="postbody">POST Body *</label>
+                  <textarea id="postbody" name="postbody" class="form-control" placeholder="POST Body *" rows="10" required="required" data-error="POST Body is required">{
+  "OrderBy":"0994d0f8-35e7-4a6d-9cd9-2ae97cd8b993",
+  "Desc":false,
+  "AttributeExistsFilters":[
+
+  ],
+  "DateFilters":[
+
+  ],
+  "SearchStringAttributes":[
+    "0994d0f8-35e7-4a6d-9cd9-2ae97cd8b993"
+  ],
+  "AttributeFilterOperator":"Or",
+  "Archived":false,
+  "OnHold":false,
+  "SearchString":"028400517737",
+  "DataOwner":"DATAOWNERID"
+}</textarea>
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <input type="submit" class="btn btn-success btn-send" value="Submit">
+              </div>
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="scriptresult">Script Result</label>
+                  <textarea id="scriptresult" name="scriptresult" class="form-control" rows="2"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <p class="text-muted">
+                  <strong>*</strong> All fields are required.</p>
+                </div>
+              </div>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
+<script type="text/javascript">
+var $form = $('#demo-form');
+// init the validator
+// validator files are included in the download package
+// otherwise download from http://1000hz.github.io/bootstrap-validator
+$form.validator();
+
+$(function () {
+  // when the form is submitted
+  $form.on('submit', function (e) {
+    e.preventDefault();
+    var baseUrl = $('#apiurl').val();
+    var body = $('#postbody').val().replace('DATAOWNERID', $('#dataownerid').val());
+    var path = $('#path').val().replace('DATAOWNERID', $('#dataownerid').val())
+    let build = './syndtest.sh "' + $('#uname').val() + '" "' + $('#secret').val() + "\" '" + JSON.stringify(JSON.parse(body)) + "' '" + baseUrl + path + "'";
+    $('#scriptresult').val(build);
+    return false;
+  });
+});
+/*
+'https://api.syndigo.com/api/attribute/7cf656a0-1f74-4ed0-bb06-7de031f6e05c'
+
+e730a004-f954-4b6f-86cf-13f03864ddf2 - Planogram Straight on Front Shot Image
+31d93a71-0e95-4b27-bac3-8329794f7a7c - Planogram Straight on Bottom View Image
+1b39ba3d-501e-4951-ae61-4259a63ce400 - Planogram Straight on Top View Image
+93d22e97-989a-49ed-b499-53909ae70cc2 - Planogram Straight on Right View Image
+864ca2dc-cd66-4ff0-9f12-fd808d4cc600 - Planogram Straight on Back Shot Image
+5edad4b7-188f-4bae-b06c-56349465b16c - Planogram Straight on Left View Image
+645296e8-a910-43c3-803c-b51d3f1d4a89 - Main Product Image
+e3238a4c-1936-400d-84c0-63cb320c24ce - Front - Center - Elevated
+7cf656a0-1f74-4ed0-bb06-7de031f6e05c - Ecommerce
+ComplexValues.Assets.en-US
+
+ */
+    </script>
+  </body>
+</html>
