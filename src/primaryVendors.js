@@ -2,7 +2,6 @@ import got        from 'got'
 import xmljs      from 'xml-js'
 import storeTasks from './storeTasks'
 import gtinPath   from './gtinPath'
-import rua        from 'random-useragent'
 
 const debug = require('debug')('gtin-cloud')
 
@@ -91,19 +90,19 @@ class Handlers {
 
     const url = `${baseUrl}/ui/product/`
     const headers = {
-      "Authorization": `EN ${syndigoAuthValue}`
+      'Authorization': `EN ${syndigoAuthValue}`
     }
     const json = {
-      "OrderBy": "0994d0f8-35e7-4a6d-9cd9-2ae97cd8b993",
-      "Desc": false,
-      "SearchStringAttributes":[
-        "0994d0f8-35e7-4a6d-9cd9-2ae97cd8b993"
+      'OrderBy': '0994d0f8-35e7-4a6d-9cd9-2ae97cd8b993',
+      'Desc': false,
+      'SearchStringAttributes':[
+        '0994d0f8-35e7-4a6d-9cd9-2ae97cd8b993'
       ],
-      "AttributeFilterOperator": "Or",
-      "Archived": false,
-      "OnHold": false,
-      "SearchString": gtin,
-      "DataOwner": ownerId
+      'AttributeFilterOperator': 'Or',
+      'Archived': false,
+      'OnHold': false,
+      'SearchString': gtin,
+      'DataOwner': ownerId
     }
     const searchParams = {
       skip: 0,

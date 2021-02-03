@@ -49,17 +49,20 @@ export default async (event, context, callback) => {
 
   try {
     // json stringify because we expect an object
-    if (vendor === 'datakick') {
-      const rst = await primary.datakickRequest(gtin, !nostore, imageUrl)
+    if (vendor === 'syndigo') {
+      const rst = await primary.syndigoRequest(gtin, !nostore, imageUrl)
       return rspHandler(rst)
-    } else if (vendor === 'eandata') {
-      const rst = await primary.eanDataRequest(gtin, !nostore, imageUrl)
+    } else if (vendor === 'kwikee') {
+      const rst = await primary.kwikeeRequest(gtin, !nostore, imageUrl)
       return rspHandler(rst)
     } else if (vendor === 'itemmaster') {
       const rst = await primary.itemMasterRequest(gtin, !nostore, imageUrl)
       return rspHandler(rst)
-    } else if (vendor === 'kwikee') {
-      const rst = await primary.kwikeeRequest(gtin, !nostore, imageUrl)
+    } else if (vendor === 'datakick') {
+      const rst = await primary.datakickRequest(gtin, !nostore, imageUrl)
+      return rspHandler(rst)
+    } else if (vendor === 'eandata') {
+      const rst = await primary.eanDataRequest(gtin, !nostore, imageUrl)
       return rspHandler(rst)
     } else if (vendor === 'tesco') {
       const rst = await primary.tescoRequest(gtin, !nostore, imageUrl)
