@@ -143,7 +143,7 @@ class Handlers {
 
       if (product && product.Components && image == null) {
         product.gtin      = myGtin
-        product.image     = Handlers.syndigoExtractMainImage(product.components)
+        product.image     = Handlers.syndigoExtractMainImage(product.Components)
         product.gtin_path = gtinPath(myGtin)
         product._ts       = (new Date()).toISOString()
 
