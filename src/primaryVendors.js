@@ -75,6 +75,32 @@ class Handlers {
     return result
   }
 
+  static syndigoExtractMainImage(components) {
+    let image = null
+
+    if (Array.isArray(components)) {
+      // Front-Center-Elevated
+      let asset = Handlers.syndigoExtractAsset(components, 'e3238a4c-1936-400d-84c0-63cb320c24ce')
+      if (asset) {
+        image = `https://assets.edgenet.com/${asset.Value}?filetype=jpg&size=1000&numratio=1&denratio=1&crop=False`
+      } else {
+        // Planogram Front
+        asset = Handlers.syndigoExtractAsset(components, 'e730a004-f954-4b6f-86cf-13f03864ddf2')
+        if (asset) {
+          image = `https://assets.edgenet.com/${asset.Value}?filetype=jpg&size=1000&numratio=1&denratio=1&crop=False`
+        } else {
+          // Main Product Image
+          asset = Handlers.syndigoExtractAsset(components, '645296e8-a910-43c3-803c-b51d3f1d4a89')
+          if (asset) {
+            image = `https://assets.edgenet.com/${asset.Value}?filetype=jpg&size=1000&numratio=1&denratio=1&crop=False`
+          }
+        }
+      }
+    }
+
+    return image
+  }
+
   static async syndigoRequest(gtin, storeData = false, imageUrl = null) {
     const baseUrl  = process.env.SYNDIGO_URL
     const userName = encodeURIComponent(process.env.SYNDIGO_USERNAME)
@@ -116,22 +142,8 @@ class Handlers {
       let image     = imageUrl
 
       if (product && product.Components && image == null) {
-        // console.log(JSON.stringify(obj.items.item, null, 2))
-        const components = product.Components
-        if (Array.isArray(components)) {
-          let asset = Handlers.syndigoExtractAsset(components, 'e3238a4c-1936-400d-84c0-63cb320c24ce')
-          if (asset) {
-            image = `https://assets.edgenet.com/${asset.Value}?filetype=jpg&size=1000&numratio=1&denratio=1&crop=False`
-          } else {
-            asset = Handlers.syndigoExtractAsset(components, '7cf656a0-1f74-4ed0-bb06-7de031f6e05c')
-            if (asset) {
-              image = `https://assets.edgenet.com/${asset.Value}?filetype=jpg&size=1000&numratio=1&denratio=1&crop=False`
-            }
-          }
-        }
-
         product.gtin      = myGtin
-        product.image     = image
+        product.image     = Handlers.syndigoExtractMainImage(product.components)
         product.gtin_path = gtinPath(myGtin)
         product._ts       = (new Date()).toISOString()
 
@@ -199,17 +211,8 @@ class Handlers {
       let image     = imageUrl
 
       if (product && product.Components && image == null) {
-        // console.log(JSON.stringify(obj.items.item, null, 2))
-        const components = product.Components
-        if (Array.isArray(components)) {
-          let asset = Handlers.syndigoExtractAsset(components, 'e3238a4c-1936-400d-84c0-63cb320c24ce')
-          if (asset) {
-            image = `https://assets.edgenet.com/${asset.Value}?filetype=jpg&size=1000&numratio=1&denratio=1&crop=False`
-          }
-        }
-
         product.gtin      = myGtin
-        product.image     = image
+        product.image     = Handlers.syndigoExtractMainImage(product.components)
         product.gtin_path = gtinPath(myGtin)
         product._ts       = (new Date()).toISOString()
 
