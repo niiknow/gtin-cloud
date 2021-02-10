@@ -186,12 +186,12 @@ class Handlers {
     const json = {
       'OrderBy': '0994d0f8-35e7-4a6d-9cd9-2ae97cd8b993',
       'Desc': false,
-      "DateFilters":[
+      'DateFilters':[
         {
-          "Name": "LastModifiedDate",
-          "Operator": "GreaterThan",
-          "Value": moDate.toISOString(),
-          "IncludeMissing":true
+          'Name': 'LastModifiedDate',
+          'Operator': 'GreaterThan',
+          'Value': moDate.toISOString(),
+          'IncludeMissing':true
         }
       ],
       'AttributeFilterOperator': 'Or',
@@ -201,33 +201,12 @@ class Handlers {
     }
     const searchParams = {
       skip: 0,
-      take: 1
+      take: 25
     }
-    let myGtin = `0000000000000${gtin}`.slice(-14)
-
     try {
       const rst = await got.post(url, { json, headers, searchParams, responseType: 'json' })
-      let product   = rst.body.Results[0]
-      let image     = imageUrl
 
-      if (product && product.Components && image == null) {
-        product.gtin      = myGtin
-        product.image     = Handlers.syndigoExtractMainImage(product.components)
-        product.gtin_path = gtinPath(myGtin)
-        product._ts       = (new Date()).toISOString()
-
-        if (storeData) {
-          // stash the data and image
-          const rsp = storeTasks(myGtin, image, 'image', product, 'syndigo', null, { headers })
-          debug('prep to store data', rsp.tasks.length)
-          if (rsp.tasks.length > 0) {
-            debug('storing data')
-            await Promise.all(rsp.tasks)
-          }
-        }
-      }
-
-      return product
+      return rst
     } catch(e) {
       syndigoAuthValue = ''
       debug(JSON.stringify(e, null, 2))
