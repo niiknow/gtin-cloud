@@ -3,7 +3,7 @@ import handler from '../src/imageHandler'
 
 const baseUrl = process.env.CDN_BASE
 
-jest.setTimeout(30000)
+jest.setTimeout(60000)
 
 describe('image-handler-tests', () => {
   test('test request valid gtin with itemmaster', async () => {

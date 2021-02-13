@@ -1,7 +1,7 @@
 require('./_loadConfig')
 import handlers from '../src/primaryVendors'
 
-jest.setTimeout(30000)
+jest.setTimeout(60000)
 
 describe('eandata-research-tests', () => {
 
