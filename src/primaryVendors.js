@@ -58,30 +58,24 @@ class Handlers {
   }
 
   static syndigoExtractAsset(components, attrId) {
-    let result = null
-
     if (Array.isArray(components)) {
       let i = 0;
-      for(i=0; i < components.length; i++) {
+      for (i=0; i < components.length; i++) {
         let comp = components[i]
         if (comp.Assets && comp.Assets['en-US']) {
           let j = 0
           for (j=0; j < comp.Assets['en-US'].length; j++) {
             let asset = comp.Assets['en-US'][j]
             if (asset.AttributeId === attrId) {
-              result = asset
-              break;
+              // immediately return if found
+              return asset
             }
           }
-        }
-
-        if (result) {
-          break
         }
       }
     }
 
-    return result
+    return null
   }
 
   static syndigoExtractMainImage(components) {
