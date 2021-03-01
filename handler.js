@@ -1,3 +1,4 @@
+import 'source-map-support/register'
 import imageH from './src/imageHandler'
 import storeH from './src/storeHandler'
 import researchH from './src/researchHandler'

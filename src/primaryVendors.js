@@ -137,12 +137,14 @@ class Handlers {
       skip: 0,
       take: 1
     }
-    let myGtin = `0000000000000${gtin}`.slice(-14)
+    let myGtin  = `0000000000000${gtin}`.slice(-14)
+    let product = {}
+    let image   = imageUrl
 
     try {
       const rst = await got.post(url, { json, headers, searchParams, responseType: 'json' })
-      let product   = rst.body.Results[0]
-      let image     = imageUrl
+
+      product = rst.body.Results[0]
 
       if (product && product.Components && image == null) {
         product.gtin      = myGtin
@@ -159,6 +161,8 @@ class Handlers {
             await Promise.all(rsp.tasks)
           }
         }
+      } else {
+        debug('Product not found', rst.body)
       }
 
       return product

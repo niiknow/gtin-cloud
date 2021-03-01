@@ -29,7 +29,7 @@ export default async (event, context, callback) => {
     return rspHandler(`${gtin} must be at least 12 characters`, 422)
   }
 
-  debug(`started for ${gtin}`)
+  debug(`started for ${gtin} ${vendor}`)
   let data   = null
   let myGtin = `00000000000000${gtin}`.slice(-14)
 
