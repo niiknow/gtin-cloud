@@ -24,9 +24,11 @@ provider:
   region: us-east-1
   timeout: 29
   memorySize: 512
-  apiKeys:
-    - ${opt:stage, 'dev'}-key
-    - ${opt:stage, 'dev'}-han
+  apiGateway:
+    shouldStartNameWithService: true
+    apiKeys:
+      - ${opt:stage, 'dev'}-key
+      - ${opt:stage, 'dev'}-han
   iam:
     role:
       statements:
