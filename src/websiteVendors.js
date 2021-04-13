@@ -1,5 +1,5 @@
 import got        from 'got'
-import cherio     from 'cherio'
+import cheerio    from 'cheerio'
 import gtinPath   from './gtinPath'
 import rua        from 'random-useragent'
 import scrapeIt   from 'scrape-it'
@@ -49,9 +49,9 @@ const scrapeGoogleShopping = async (shopUrl) => {
       }
     })
 
-    // remove script and style tags to help cherio
+    // remove script and style tags to help cheerio
     const bd   = rst.body.replace(scriptReg, '')
-    const $    = cherio.load(bd)
+    const $    = cheerio.load(bd)
     const opts = {
       name: 'title',
       description: {
@@ -115,7 +115,7 @@ const scrapeAmazon = async (asin) => {
       }
     })
 
-    const $ = cherio.load(rst.body)
+    const $ = cheerio.load(rst.body)
     const opts =  {
       title: '#productTitle',
       sale_price: 'tr#priceblock_ourprice_row td.a-span12 span#priceblock_ourprice',
