@@ -14,8 +14,8 @@ describe('itemmaster-research-tests', () => {
     expect(rst.gtin_path).not.toBeNull()
     expect(rst._ts).not.toBeNull()
   })*/
-  test('syndigo lookup 028400517737', async () => {
-    const rst = await handlers.syndigoRequest('028400517737', false)
+  test('syndigo lookup 90045310659145', async () => {
+    const rst = await handlers.syndigoRequest('90045310659145', true)
     console.log(rst)
   })
 })

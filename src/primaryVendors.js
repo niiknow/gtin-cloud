@@ -146,18 +146,22 @@ class Handlers {
 
       product = rst.body.Results[0]
 
-      if (product && product.Components && image == null) {
+      if (product) {
         product.gtin      = myGtin
-        product.image     = Handlers.syndigoExtractMainImage(product.Components)
+        product.image     = image
         product.gtin_path = gtinPath(myGtin)
         product._ts       = (new Date()).toISOString()
 
+        if (product.Components && product.image == null) {
+          product.image = Handlers.syndigoExtractMainImage(product.Components)
+        }
+
         if (storeData) {
           // stash the data and image
-          const rsp = storeTasks(myGtin, image, 'image', product, 'syndigo', null, { headers })
+          const rsp = storeTasks(myGtin, product.image, 'image', product, 'syndigo', null, { headers })
           debug('prep to store data', rsp.tasks.length)
           if (rsp.tasks.length > 0) {
-            debug('storing data')
+            debug('storing data', rsp.tasks.length)
             await Promise.all(rsp.tasks)
           }
         }
