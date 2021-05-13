@@ -178,54 +178,6 @@ class Handlers {
     }
   }
 
-  static async syndigoLastModified(moDate = new Date()) {
-    const baseUrl  = process.env.SYNDIGO_URL
-    const userName = encodeURIComponent(process.env.SYNDIGO_USERNAME)
-    const secret   = encodeURIComponent(process.env.SYNDIGO_SECRET)
-    const ownerId  = process.env.SYNDIGO_DATAOWNERID
-
-    if (!syndigoAuthValue) {
-      // auth
-      const authResult = await got(`${baseUrl}/api/auth?username=${userName}&secret=${secret}`, { responseType: 'json' })
-      // get Value
-      syndigoAuthValue = authResult.body.Value
-    }
-
-    const url = `${baseUrl}/ui/product/`
-    const headers = {
-      'Authorization': `EN ${syndigoAuthValue}`
-    }
-    const json = {
-      'OrderBy': '0994d0f8-35e7-4a6d-9cd9-2ae97cd8b993',
-      'Desc': false,
-      'DateFilters':[
-        {
-          'Name': 'LastModifiedDate',
-          'Operator': 'GreaterThan',
-          'Value': moDate.toISOString(),
-          'IncludeMissing':true
-        }
-      ],
-      'AttributeFilterOperator': 'Or',
-      'Archived': false,
-      'OnHold': false,
-      'DataOwner': ownerId
-    }
-    const searchParams = {
-      skip: 0,
-      take: 25
-    }
-    try {
-      const rst = await got.post(url, { json, headers, searchParams, responseType: 'json' })
-
-      return rst
-    } catch(e) {
-      syndigoAuthValue = ''
-      debug(JSON.stringify(e, null, 2))
-      return { error: 'request error', ex: e }
-    }
-  }
-
   static async itemMasterRequest(gtin, storeData = false, imageUrl = null, manufacturer = null) {
     const url = `${process.env.SYNDIGO_URL}/im/v2.2/item/`
 
