@@ -122,8 +122,8 @@ class Handlers {
       'Authorization': `EN ${syndigoAuthValue}`
     }
     const json = {
-      'OrderBy': '0994d0f8-35e7-4a6d-9cd9-2ae97cd8b993',
-      'Desc': false,
+      'OrderBy': '26834672-7c90-4918-9b19-5bd419023b12',  // sort by DatePosted DESC
+      'Desc': true,
       'SearchStringAttributes':[
         '0994d0f8-35e7-4a6d-9cd9-2ae97cd8b993'
       ],
@@ -140,6 +140,7 @@ class Handlers {
     let myGtin  = `0000000000000${gtin}`.slice(-14)
     let product = {}
     let image   = imageUrl
+    // console.log(headers.Authorization)
 
     try {
       const rst = await got.post(url, { json, headers, searchParams, responseType: 'json' })
