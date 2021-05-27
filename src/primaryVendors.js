@@ -294,8 +294,15 @@ class Handlers {
       if (image === null && idata.kwikeeApiV3 && idata.kwikeeApiV3.gtin)
       {
         obj.media = idata.kwikeeApiV3.gtin[0] || idata.kwikeeApiV3.gtin
-        if (obj.media.mainImageAsset && obj.media.mainImageAsset.files[0]) {
-          image = obj.media.mainImageAsset.files[0].url
+        if (obj.media.mainImageAsset) {
+          let i = 0;
+          for (i=0; i < obj.media.mainImageAsset.files.length; i++) {
+            let img = obj.media.mainImageAsset.files[i];
+            if (img.mimetype.toLowerCase() === 'image/jpeg') {
+              image = img.url
+              break;
+            }
+          }
         }
       }
 
