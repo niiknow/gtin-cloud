@@ -298,7 +298,8 @@ class Handlers {
           let i = 0;
           for (i=0; i < obj.media.mainImageAsset.files.length; i++) {
             let img = obj.media.mainImageAsset.files[i];
-            if (img.mimetype.toLowerCase() === 'image/jpeg') {
+            if (img.mimetype.toLowerCase() === 'image/jpeg'
+              && img.type.toLowerCase() === 'kwikee:gs1') {
               image = img.url
               break;
             }
