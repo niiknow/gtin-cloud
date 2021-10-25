@@ -289,7 +289,7 @@ class Handlers {
 
   static async openfoodfactsRequest(gtin, storeData = false, imageUrl = null) {
     try {
-      const rst = await got(`https://world.openfoodfacts.org/api/v0/product/${gtin}.json`)
+      const rst = await got(`https://world.openfoodfacts.org/api/v1/product/${gtin}.json`)
       // debug(rst.body)
 
       const obj = JSON.parse(rst.body).product
