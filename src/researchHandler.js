@@ -55,9 +55,6 @@ export default async (event, context, callback) => {
     } else if (vendor === 'kwikee') {
       const rst = await primary.kwikeeRequest(gtin, !nostore, imageUrl)
       return rspHandler(rst)
-    } else if (vendor === 'itemmaster') {
-      const rst = await primary.itemMasterRequest(gtin, !nostore, imageUrl)
-      return rspHandler(rst)
     } else if (vendor === 'datakick') {
       const rst = await primary.datakickRequest(gtin, !nostore, imageUrl)
       return rspHandler(rst)

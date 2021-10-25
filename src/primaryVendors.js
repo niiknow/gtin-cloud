@@ -178,97 +178,6 @@ class Handlers {
     }
   }
 
-  static async itemMasterRequest(gtin, storeData = false, imageUrl = null, manufacturer = null) {
-    const url = `${process.env.SYNDIGO_URL}/im/v2.2/item/`
-
-    const headers = {
-      username: process.env.IM_USER,
-      password: process.env.IM_PASS
-    }
-
-    const searchParams = {
-      upc: gtin,
-      ef: 'jpg',
-      idx: 0,
-      limit: 1,
-      epf: 1000,
-      pi: 'c',
-      allImg: 'Y'
-    }
-
-    let myGtin = `0000000000000${gtin}`.slice(-14)
-
-    if (manufacturer) {
-      searchParams.m = manufacturer
-    }
-
-    try {
-      debug(`begin ${gtin} store ${storeData}`, searchParams, imageUrl)
-      const rst  = await got(url, { searchParams, headers })
-      const json = xmljs.xml2json(rst.body, {
-        compact: true,
-        ignoreDeclaration: true
-      })
-
-      const obj     = JSON.parse(json)
-      let product   = null
-      let image     = imageUrl
-
-      if (obj.items && obj.items.item) {
-        // console.log(JSON.stringify(obj.items.item, null, 2))
-        product = obj.items.item
-
-        if (image === null && product.media) {
-          const medias = product.media.medium || product.media
-
-          if (Array.isArray(medias)) {
-            medias.forEach((media) => {
-              if (image) {
-                return;
-              }
-
-              // console.log(media)
-              if (media._attributes.view === 'E_A1A3_1000x1000') {
-                image = media.url._text
-              }
-            })
-          } else if (medias.url) {
-            image = medias.url._text
-          }
-        }
-
-        if (image) {
-          image = image.replace('trim=True', '').replace('transparent=True', '')
-        }
-
-
-        product.gtin      = myGtin
-        product.image     = image
-        product.gtin_path = gtinPath(myGtin)
-        product._ts       = (new Date()).toISOString()
-
-        if (storeData) {
-          // stash the data and image
-          const rsp = storeTasks(myGtin, image, 'image', product, 'itemmaster', null, { headers })
-          debug('prep to store data', rsp.tasks.length)
-          if (rsp.tasks.length > 0) {
-            debug('storing data')
-            await Promise.all(rsp.tasks)
-          }
-        }
-      } else {
-        debug(json)
-        return `${gtin} not found`
-      }
-
-      debug(`completed ${gtin}`)
-      return product ? product : `${gtin} empty result`
-    } catch(e) {
-      debug(JSON.stringify(e, null, 2))
-      return { error: 'request error' }
-    }
-  }
-
   static async kwikeeRequest(gtin, storeData = false, imageUrl = null) {
 
     gtin = `0000000000000${gtin}`.slice(-14)
@@ -300,7 +209,7 @@ class Handlers {
             let img = obj.media.mainImageAsset.files[i];
             if (img.mimetype.toLowerCase() === 'image/jpeg'
               && img.type.toLowerCase() === 'kwikee:gs1') {
-              image = img.url
+              image = img.url.replace('/fileType_JPG;size_2400x2400;dpi_300/', '/fileType_JPG;size_2400x2400;dpi_300;denratio_1;numratio_1/');
               break;
             }
           }
