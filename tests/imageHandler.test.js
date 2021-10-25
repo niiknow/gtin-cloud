@@ -6,11 +6,11 @@ const baseUrl = process.env.CDN_BASE
 jest.setTimeout(60000)
 
 describe('image-handler-tests', () => {
-  test('test request valid gtin with itemmaster', async () => {
+  test('test request valid gtin with syndigo', async () => {
     const rst = await handler(
       {
         pathParameters: {
-          client: 'itemmaster',
+          client: 'syndigo',
           gtin: '00018200281372'
         },
         queryStringParameters: {
