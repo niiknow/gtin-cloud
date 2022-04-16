@@ -21,7 +21,7 @@ export default async (event, context, callback) => {
   const force      = !!(qs.force || false)
   const nostore    = !!(qs.nostore || false)
   const imageUrl   = qs.url
-  const qsDigits   = qs.digits || 14
+  const qsDigits   = parseInt(qs.digits || '14')
   // force - to force fresh data, do not use cache
   // nostore - true to not save fresh data to cache
 
