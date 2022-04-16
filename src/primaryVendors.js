@@ -1,7 +1,7 @@
 import got        from 'got'
-import xmljs      from 'xml-js'
 import storeTasks from './storeTasks'
 import gtinPath   from './gtinPath'
+import fs from 'fs'
 
 const debug = require('debug')('gtin-cloud')
 
@@ -104,7 +104,7 @@ class Handlers {
     return image
   }
 
-  static async syndigoRequest(gtin, storeData = false, imageUrl = null) {
+  static async syndigoRequest(gtin, storeData = false, imageUrl = null, useUPC12 = false) {
     const baseUrl  = process.env.SYNDIGO_URL
     const userName = encodeURIComponent(process.env.SYNDIGO_USERNAME)
     const secret   = encodeURIComponent(process.env.SYNDIGO_SECRET)
@@ -125,7 +125,7 @@ class Handlers {
       'OrderBy': '26834672-7c90-4918-9b19-5bd419023b12',  // sort by DatePosted DESC
       'Desc': true,
       'SearchStringAttributes':[
-        '0994d0f8-35e7-4a6d-9cd9-2ae97cd8b993'
+        useUPC12 ? '6d030ff8-72ce-4f42-ba53-023f55c53a20' : '0994d0f8-35e7-4a6d-9cd9-2ae97cd8b993'
       ],
       'AttributeFilterOperator': 'Or',
       'Archived': false,
@@ -135,7 +135,7 @@ class Handlers {
     }
     const searchParams = {
       skip: 0,
-      take: 1
+      take: 10
     }
     let myGtin  = `0000000000000${gtin}`.slice(-14)
     let product = {}
@@ -145,6 +145,11 @@ class Handlers {
     try {
       const rst = await got.post(url, { json, headers, searchParams, responseType: 'json' })
 
+/*
+fs.writeFileSync('./data.json', JSON.stringify(rst.body));
+console.log(headers, url, json, rst.body.Results.length);
+*/
+
       product = rst.body.Results[0]
 
       if (product) {
@@ -152,6 +157,7 @@ class Handlers {
         product.image     = image
         product.gtin_path = gtinPath(myGtin)
         product._ts       = (new Date()).toISOString()
+        product.params    = json
 
         if (product.Components && product.image == null) {
           product.image = Handlers.syndigoExtractMainImage(product.Components)
@@ -169,6 +175,8 @@ class Handlers {
       } else {
         debug('Product not found', rst.body)
       }
+
+// fs.writeFileSync('./data.json', JSON.stringify(product));
 
       return product
     } catch(e) {

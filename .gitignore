@@ -57,4 +57,4 @@ env.yml
 tests/*config.json
 docker-compose.yml
 syndtest.json
-
+data.json

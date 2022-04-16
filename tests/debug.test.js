@@ -2,8 +2,9 @@ require('./_loadConfig')
 import handlers from '../src/primaryVendors'
 
 jest.setTimeout(60000)
-
-describe('itemmaster-research-tests', () => {
+//00009542030407
+//00009542030391
+describe('syndigo-research-tests', () => {
   /*test('itemmaster lookup 00688267075230', async () => {
     const rst = await handlers.itemMasterRequest('00688267075230', false)
     // console.log(rst)
@@ -14,8 +15,8 @@ describe('itemmaster-research-tests', () => {
     expect(rst.gtin_path).not.toBeNull()
     expect(rst._ts).not.toBeNull()
   })*/
-  test('syndigo lookup 00819898010158', async () => {
-    const rst = await handlers.syndigoRequest('00819898010158', false)
+  test('syndigo lookup 00014500019950', async () => {
+    const rst = await handlers.syndigoRequest('00014500019950', false, null, true)
     console.log(rst)
   })
 })

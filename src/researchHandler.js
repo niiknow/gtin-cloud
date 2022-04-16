@@ -21,6 +21,7 @@ export default async (event, context, callback) => {
   const force      = !!(qs.force || false)
   const nostore    = !!(qs.nostore || false)
   const imageUrl   = qs.url
+  const qsDigits   = qs.digits || 14
   // force - to force fresh data, do not use cache
   // nostore - true to not save fresh data to cache
 
@@ -30,8 +31,9 @@ export default async (event, context, callback) => {
   }
 
   debug(`started for ${gtin} ${vendor}`)
-  let data   = null
-  let myGtin = `00000000000000${gtin}`.slice(-14)
+  let data       = null
+  let myGtin     = `00000000000000${gtin}`.slice(-14)
+  let useDigits  = qsDigits < 13 ? 12 : (qsDigits > 14 ? 14 : qsDigits)
 
   // if force, then we do not want to use cache
   // else, we always try to cache first
@@ -50,7 +52,7 @@ export default async (event, context, callback) => {
   try {
     // json stringify because we expect an object
     if (vendor === 'syndigo') {
-      const rst = await primary.syndigoRequest(gtin, !nostore, imageUrl)
+      const rst = await primary.syndigoRequest(gtin, !nostore, imageUrl, useDigits < 13)
       return rspHandler(rst)
     } else if (vendor === 'kwikee') {
       const rst = await primary.kwikeeRequest(gtin, !nostore, imageUrl)
