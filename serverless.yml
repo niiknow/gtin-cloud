@@ -45,17 +45,17 @@ provider:
   environment: ${file(env.yml):${self:provider.stage}}
 
 package:
-  exclude:
-    - node_modules/**
-    - tests/**
-    - .babelrc
-    - .d*
-    - .e*
-    - .g*
-    - .git/**
-    - .DS_*
-    - docker*.yml
-    - run-*.sh
+  patterns:
+    - '!node_modules/**'
+    - '!tests/**'
+    - '!.babelrc'
+    - '!.d*'
+    - '!.e*'
+    - '!.g*'
+    - '!.git/**'
+    - '!.DS_*'
+    - '!docker*.yml'
+    - '!run-*.sh'
 
 functions:
   storeHandler:
