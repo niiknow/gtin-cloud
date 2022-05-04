@@ -65,6 +65,7 @@ The optional `vendor` parameter identify that this is to store Vendor's specific
 3. *nostore* - default is 0; set to 1 to not cache the research result
 4. *q* - the gtin
 5. *url* - optional: if you have the image URL already, pass it in to use instead of trying to perform additional research/API calls.  Sometime, Vendor API requires multiple call to get both image and gtin.  This help reduce the research API calls; so to not exceed Vendor's API rate limit.
+6.  *digits* - optional valid values (12,13,14): research with UPC digits length for API requiring research not using GTIN.
 
 # Dicussion/Analysis
 > What we found during our API Integration with reguard to how others are storing their GTIN data
