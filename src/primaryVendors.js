@@ -1,7 +1,7 @@
 import got        from 'got'
 import storeTasks from './storeTasks'
 import gtinPath   from './gtinPath'
-import fs from 'fs'
+// import fs from 'fs'
 
 const debug = require('debug')('gtin-cloud')
 
