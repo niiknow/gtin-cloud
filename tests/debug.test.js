@@ -15,8 +15,8 @@ describe('syndigo-research-tests', () => {
     expect(rst.gtin_path).not.toBeNull()
     expect(rst._ts).not.toBeNull()
   })*/
-  test('syndigo lookup 00014500019950', async () => {
-    const rst = await handlers.syndigoRequest('00014500019950', false, null, true)
+  test('syndigo lookup 041333415017', async () => {
+    const rst = await handlers.syndigoRequest('041333415017', false, null, true)
     console.log(rst)
   })
 })
