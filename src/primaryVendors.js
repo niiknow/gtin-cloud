@@ -130,7 +130,7 @@ class Handlers {
       'AttributeFilterOperator': 'Or',
       'Archived': false,
       'OnHold': false,
-      'SearchString': useUPC12 ? gtin.slice(-14) : gtin,
+      'SearchString': useUPC12 ? gtin.slice(-12) : gtin,
       'DataOwner': ownerId
     }
     const searchParams = {
